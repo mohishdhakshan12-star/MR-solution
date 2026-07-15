@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize UI components first
   initMobileMenu();
   initContactForm();
+  initHubtownBackground();
 
   // Run animations if motion is allowed
   if (!prefersReducedMotion) {
@@ -64,7 +65,64 @@ function initMobileMenu() {
 /* --------------------------------------------------
    GSAP & SCROLLTRIGGER ANIMATIONS
    -------------------------------------------------- */
-function initGsapAnimations() {
+// Initialize Background Schematic Parallax
+function initBackgroundParallax() {
+  // Gracefully exit if user prefers reduced motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  // Slow architectural drag on the main schematic drafting grid
+  gsap.to('.schematic-grid-overlay', {
+    yPercent: -15,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: 'body',
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 0.5 // Smooth catch-up delay
+    }
+  });
+
+  // Layered depth: Animate terminal nodes at differing, accelerated velocities
+  gsap.to('.node-alpha', {
+    y: '-40vh',
+    x: '30px',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: 'body',
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 0.8
+    }
+  });
+
+  gsap.to('.node-beta', {
+    y: '-60vh',
+    x: '-40px',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: 'body',
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 1.2
+    }
+  });
+
+  gsap.to('.node-gamma', {
+    y: '-35vh',
+    x: '15px',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: 'body',
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 0.6
+    }
+  });
+}
+
+// Call configuration alongside existing GSAP animations
+initBackgroundParallax();
+   function initGsapAnimations() {
   // Register ScrollTrigger plugin (loaded via CDN)
   gsap.registerPlugin(ScrollTrigger);
 
@@ -276,4 +334,34 @@ function initContactForm() {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return re.test(String(email).toLowerCase());
   }
+}
+
+function initHubtownBackground() {
+  // Gracefully stop if user profile limits animation motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  // Seamlessly scale the blueprint background outwards as user scrolls down
+  gsap.to(".blueprint-canvas", {
+    scale: 2.2,             // Depth factor of zoom reveal
+    opacity: 0.3,           // Subtly fades away as you enter data deep sections
+    ease: "none",
+    scrollTrigger: {
+      trigger: "body",      // Tracks movement across entire length of webpage
+      start: "top top",     // Starts tracking instantly from load configuration
+      end: "bottom bottom", // Reaches terminal growth factor at the footer frame
+      scrub: 0.5            // High-fidelity catch up delay for silky mechanics
+    }
+  });
+
+  // Rotate alignment crosshairs smoothly in alternate direction
+  gsap.to(".schematic-crosshairs", {
+    rotation: 45,
+    ease: "none",
+    scrollTrigger: {
+      trigger: "body",
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 1
+    }
+  });
 }

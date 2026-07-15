@@ -130,6 +130,74 @@ select:focus-visible {
   border-left: 1px solid var(--text-muted);
 }
 
+/* Fixed full-screen container matching Hubtown layout */
+.bg-blueprint-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+  background-color: #0a0b0d; /* Sheet metal base slate */
+  perspective: 1000px;
+}
+
+/* The element that scales based on scroll depth */
+.blueprint-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Replace URL below with your actual schematic draft asset or copper texturing */
+  background: radial-gradient(circle at center, #1a1d24 0%, #0a0b0d 100%);
+  background-size: cover;
+  background-position: center;
+  transform: scale(1); /* Controlled directly by GSAP */
+  will-change: transform;
+}
+
+/* Technical micro-grid matrix mask overlay */
+.schematic-grid-mask {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(to right, rgba(66, 75, 88, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(66, 75, 88, 0.04) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+/* Alignment crosshairs kept dead center */
+.schematic-crosshairs {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Data telemetry framing */
+.telemetry-hud {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 40px;
+  box-sizing: border-box;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(193, 154, 91, 0.3); /* Dimmed brass tone */
+  pointer-events: none;
+}
+.corner-tl { position: absolute; top: 40px; left: 40px; }
+.corner-br { position: absolute; bottom: 40px; right: 40px; }
+
+/* Handle access preferences */
+@media (prefers-reduced-motion: reduce) {
+  .blueprint-canvas {
+    transform: none !important;
+  }
+}
+
 /* Typography elements */
 h1, h2, h3, h4 {
   font-family: var(--font-display);
