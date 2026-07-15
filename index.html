@@ -20,28 +20,10 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Hubtown-Style Scroll-Zoom Canvas Layer -->
+  <!-- Hubtown-Spec 3D Architectural Blueprint Stage -->
   <div class="bg-blueprint-container" aria-hidden="true">
-    <!-- The image canvas that scales and reveals itself on scroll -->
-    <div class="blueprint-canvas">
-      <!-- Fine technical sub-grid layered over the background -->
-      <div class="schematic-grid-mask"></div>
-      
-      <!-- Vector Alignment Framework -->
-      <svg class="schematic-crosshairs" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-        <g stroke="rgba(214, 123, 62, 0.2)" stroke-width="1.5" fill="none">
-          <circle cx="50%" cy="50%" r="120" stroke-dasharray="4,4" />
-          <path d="M 50% calc(50% - 160) L 50% calc(50% + 160)" />
-          <path d="M calc(50% - 160) 50% L calc(50% + 160) 50%" />
-        </g>
-      </svg>
-    </div>
-    
-    <!-- Atmospheric Data Overlays -->
-    <div class="telemetry-hud">
-      <div class="hud-item corner-tl">SYS.INIT // OPR_2026</div>
-      <div class="hud-item corner-br">GRID_MATRIX_ACTIVE</div>
-    </div>
+    <canvas id="blueprint-3d-stage"></canvas>
+    <div class="schematic-glitch-overlay"></div>
   </div>
 
   <!-- Background Technical Grid & Gridlines -->
@@ -689,6 +671,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <!-- Main Application Script -->
-  <script src="app.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>

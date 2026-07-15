@@ -1,3 +1,5 @@
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+
 /* --------------------------------------------------
    MR SOLUTION APPLICATION SCRIPT
    -------------------------------------------------- */
@@ -9,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize UI components first
   initMobileMenu();
   initContactForm();
-  initHubtownBackground();
+  initHubtownThreeDScroll();
 
   // Run animations if motion is allowed
   if (!prefersReducedMotion) {
@@ -336,32 +338,119 @@ function initContactForm() {
   }
 }
 
-function initHubtownBackground() {
-  // Gracefully stop if user profile limits animation motion
+function initHubtownThreeDScroll() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  // Seamlessly scale the blueprint background outwards as user scrolls down
-  gsap.to(".blueprint-canvas", {
-    scale: 2.2,             // Depth factor of zoom reveal
-    opacity: 0.3,           // Subtly fades away as you enter data deep sections
-    ease: "none",
-    scrollTrigger: {
-      trigger: "body",      // Tracks movement across entire length of webpage
-      start: "top top",     // Starts tracking instantly from load configuration
-      end: "bottom bottom", // Reaches terminal growth factor at the footer frame
-      scrub: 0.5            // High-fidelity catch up delay for silky mechanics
-    }
-  });
+  const canvas = document.querySelector('#blueprint-3d-stage');
+  if (!canvas) return;
 
-  // Rotate alignment crosshairs smoothly in alternate direction
-  gsap.to(".schematic-crosshairs", {
-    rotation: 45,
+  // 1. Scene Setup
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x0a0b0d, 0.015); // Emulate Hubtown structural depth fade
+
+  // 2. Camera Coordinates
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 0; // Baseline Z-axis indexing
+
+  // 3. WebGL Renderer Initialization
+  const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  // 4. Build Engineering Circuit Tunnel Geometry
+  const tunnelSegments = 60;
+  const points = [];
+  
+  // Generate a smooth mathematical line track for the tunnel path
+  for (let i = 0; i < tunnelSegments; i++) {
+    points.push(new THREE.Vector3(
+      Math.sin(i * 0.1) * 5, 
+      Math.cos(i * 0.1) * 2, 
+      i * 8
+    ));
+  }
+  
+  const tunnelPath = new THREE.CatmullRomCurve3(points);
+  
+  // Create a clean, structural cylinder mesh framework around the track
+  const tubeGeometry = new THREE.TubeGeometry(tunnelPath, 100, 4, 12, false);
+  
+  // Wireframe material rendering in your signature Plated Brass & Physical Copper tones
+  const wireframeMaterial = new THREE.MeshBasicMaterial({
+    color: 0xc19a5b, // Plated Brass hex value
+    wireframe: true,
+    transparent: true,
+    opacity: 0.07
+  });
+  
+  const tunnelMesh = new THREE.Mesh(tubeGeometry, wireframeMaterial);
+  scene.add(tunnelMesh);
+
+  // Add glowing data terminal ring nodes down the line
+  const particleCount = 200;
+  const particleGeometry = new THREE.BufferGeometry();
+  const positions = new Float32Array(particleCount * 3);
+
+  for (let i = 0; i < particleCount; i++) {
+    const t = i / particleCount;
+    const pos = tunnelPath.getPointAt(t);
+    const angle = Math.random() * Math.PI * 2;
+    const radius = 3.8 + Math.random() * 0.4; // Frame tightly along the tube walls
+    
+    positions[i * 3] = pos.x + Math.sin(angle) * radius;
+    positions[i * 3 + 1] = pos.y + Math.cos(angle) * radius;
+    positions[i * 3 + 2] = pos.z;
+  }
+
+  particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const particleMaterial = new THREE.PointsMaterial({
+    color: 0xff9d5c, // Energized copper glow hex value
+    size: 0.08,
+    transparent: true,
+    opacity: 0.4
+  });
+  
+  const particles = new THREE.Points(particleGeometry, particleMaterial);
+  scene.add(particles);
+
+  // 5. Connect Camera Flight Path directly to GSAP ScrollTrigger
+  const totalLength = points[points.length - 1].z;
+
+  gsap.to(camera.position, {
+    z: totalLength - 15,
     ease: "none",
     scrollTrigger: {
       trigger: "body",
       start: "top top",
       end: "bottom bottom",
-      scrub: 1
+      scrub: 0.8, // Smooth momentum tracking delay
+      onUpdate: (self) => {
+        // Direct the camera to look along the curve of the tunnel path based on scroll step
+        const progress = self.progress * 0.95;
+        const lookTarget = tunnelPath.getPointAt(Math.min(progress + 0.05, 1));
+        const currentPos = tunnelPath.getPointAt(progress);
+        
+        // Dynamically shift camera offsets slightly off-center for rich 3D depth parallax
+        camera.position.x = currentPos.x;
+        camera.position.y = currentPos.y + 0.2;
+        camera.lookAt(lookTarget);
+      }
     }
   });
+
+  // 6. Handle Frame Resizing
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // 7. Render Loop Engine
+  function animate() {
+    requestAnimationFrame(animate);
+    // Add micro-rotation down the wireframe tunnel for active telemetry feel
+    tunnelMesh.rotation.z += 0.0005;
+    renderer.render(scene, camera);
+  }
+  animate();
 }
