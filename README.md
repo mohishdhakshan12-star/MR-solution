@@ -1,6 +1,6 @@
-# Amperix Engineering - Web Portal
+# MR Solution - Web Portal
 
-High-fidelity single-page site design for **Amperix Engineering** — an electrical and hardware systems engineering firm.
+High-fidelity single-page site design for **MR Solution** — an electrical and hardware systems engineering firm.
 
 ## 🛠️ Stack
 - **Structure**: Semantic HTML5

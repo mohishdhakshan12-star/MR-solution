@@ -1,5 +1,5 @@
 /* --------------------------------------------------
-   AMPERIX ENGINEERING APPLICATION SCRIPT
+   MR SOLUTION APPLICATION SCRIPT
    -------------------------------------------------- */
 
 document.addEventListener("DOMContentLoaded", () => {
