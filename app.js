@@ -377,7 +377,6 @@ function initHubtownThreeDScroll() {
   // 1. Hero (Section 0) transitions (fades out and scales up as we scroll past)
   tl.to(sections[0], { 
     opacity: 0, 
-    scale: 1.8, 
     autoAlpha: 0, 
     pointerEvents: "none", 
     duration: 0.3, 
@@ -385,162 +384,133 @@ function initHubtownThreeDScroll() {
     onReverseComplete: () => sections[0].classList.add('active')
   }, 0.6);
 
-  // Stagger hero out
-  tl.to(sections[0].querySelectorAll('.stagger-hero-item'), {
-    y: -40,
-    opacity: 0,
-    stagger: 0.05,
-    duration: 0.3
-  }, 0.6);
+  // Stagger hero elements out at different 3D scales (flying past camera)
+  tl.to(sections[0].querySelectorAll('.mono-section-label, .hero-title'), { scale: 2.2, opacity: 0, duration: 0.3 }, 0.6)
+    .to(sections[0].querySelectorAll('.hero-desc, .btn'), { scale: 1.6, opacity: 0, duration: 0.3 }, 0.6)
+    .to(sections[0].querySelectorAll('.hero-signature-wrapper'), { scale: 1.3, opacity: 0, duration: 0.3 }, 0.6);
 
   // 2. Capabilities (Section 1) transitions
   tl.to(sections[1], { 
     opacity: 1, 
-    scale: 1, 
     autoAlpha: 1, 
     pointerEvents: "auto", 
     duration: 0.3, 
     onStart: () => sections[1].classList.add('active'),
     onReverseComplete: () => sections[1].classList.remove('active')
   }, 1.1)
-  // Hubtown-style stagger entrance
-  .fromTo(sections[1].querySelectorAll('.mono-section-label, .section-title, .section-desc, .capability-card'), 
-    { y: 40, opacity: 0 },
-    { y: 0, opacity: 1, stagger: 0.05, duration: 0.3, ease: "power2.out" },
-    1.1
-  )
+  // Hubtown-style depth entry (zoom from distance 0.3 to 1.0)
+  .fromTo(sections[1].querySelectorAll('.mono-section-label, .section-title'), { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 1.1)
+  .fromTo(sections[1].querySelectorAll('.section-desc'), { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 1.1)
+  .fromTo(sections[1].querySelectorAll('.capability-card'), { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, stagger: 0.05, duration: 0.3, ease: "power2.out" }, 1.1)
+  
+  // Section 1 Exit (zoom out past viewer)
   .to(sections[1], { 
     opacity: 0, 
-    scale: 1.8, 
     autoAlpha: 0, 
     pointerEvents: "none", 
     duration: 0.3, 
     onStart: () => sections[1].classList.remove('active'),
     onReverseComplete: () => sections[1].classList.add('active')
   }, 2.1)
-  // Stagger exit
-  .to(sections[1].querySelectorAll('.mono-section-label, .section-title, .section-desc, .capability-card'), {
-    y: -40,
-    opacity: 0,
-    stagger: 0.03,
-    duration: 0.3
-  }, 2.1);
+  .to(sections[1].querySelectorAll('.mono-section-label, .section-title'), { scale: 2.2, opacity: 0, duration: 0.3 }, 2.1)
+  .to(sections[1].querySelectorAll('.section-desc'), { scale: 1.7, opacity: 0, duration: 0.3 }, 2.1)
+  .to(sections[1].querySelectorAll('.capability-card'), { scale: 1.4, opacity: 0, stagger: 0.03, duration: 0.3 }, 2.1);
 
   // 3. Projects (Section 2) transitions
   tl.to(sections[2], { 
     opacity: 1, 
-    scale: 1, 
     autoAlpha: 1, 
     pointerEvents: "auto", 
     duration: 0.3, 
     onStart: () => sections[2].classList.add('active'),
     onReverseComplete: () => sections[2].classList.remove('active')
   }, 2.6)
-  // Stagger entrance
-  .fromTo(sections[2].querySelectorAll('.mono-section-label, .section-title, .section-desc, .project-row'), 
-    { y: 40, opacity: 0 },
-    { y: 0, opacity: 1, stagger: 0.05, duration: 0.3, ease: "power2.out" },
-    2.6
-  )
+  // Depth entry
+  .fromTo(sections[2].querySelectorAll('.mono-section-label, .section-title'), { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 2.6)
+  .fromTo(sections[2].querySelectorAll('.section-desc'), { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 2.6)
+  .fromTo(sections[2].querySelectorAll('.project-table-wrapper, .project-row'), { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, stagger: 0.05, duration: 0.3, ease: "power2.out" }, 2.6)
+  
+  // Section 2 Exit
   .to(sections[2], { 
     opacity: 0, 
-    scale: 1.8, 
     autoAlpha: 0, 
     pointerEvents: "none", 
     duration: 0.3, 
     onStart: () => sections[2].classList.remove('active'),
     onReverseComplete: () => sections[2].classList.add('active')
   }, 3.6)
-  // Stagger exit
-  .to(sections[2].querySelectorAll('.mono-section-label, .section-title, .section-desc, .project-row'), {
-    y: -40,
-    opacity: 0,
-    stagger: 0.03,
-    duration: 0.3
-  }, 3.6);
+  .to(sections[2].querySelectorAll('.mono-section-label, .section-title'), { scale: 2.2, opacity: 0, duration: 0.3 }, 3.6)
+  .to(sections[2].querySelectorAll('.section-desc'), { scale: 1.7, opacity: 0, duration: 0.3 }, 3.6)
+  .to(sections[2].querySelectorAll('.project-table-wrapper, .project-row'), { scale: 1.4, opacity: 0, stagger: 0.03, duration: 0.3 }, 3.6);
 
   // 4. Process (Section 3) transitions
   tl.to(sections[3], { 
     opacity: 1, 
-    scale: 1, 
     autoAlpha: 1, 
     pointerEvents: "auto", 
     duration: 0.3, 
     onStart: () => sections[3].classList.add('active'),
     onReverseComplete: () => sections[3].classList.remove('active')
   }, 4.1)
-  // Stagger entrance
-  .fromTo(sections[3].querySelectorAll('.mono-section-label, .section-title, .section-desc, .process-step'), 
-    { y: 40, opacity: 0 },
-    { y: 0, opacity: 1, stagger: 0.05, duration: 0.3, ease: "power2.out" },
-    4.1
-  )
+  // Depth entry
+  .fromTo(sections[3].querySelectorAll('.mono-section-label, .section-title'), { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 4.1)
+  .fromTo(sections[3].querySelectorAll('.section-desc'), { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 4.1)
+  .fromTo(sections[3].querySelectorAll('.process-step'), { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, stagger: 0.05, duration: 0.3, ease: "power2.out" }, 4.1)
+  
+  // Section 3 Exit
   .to(sections[3], { 
     opacity: 0, 
-    scale: 1.8, 
     autoAlpha: 0, 
     pointerEvents: "none", 
     duration: 0.3, 
     onStart: () => sections[3].classList.remove('active'),
     onReverseComplete: () => sections[3].classList.add('active')
   }, 5.1)
-  // Stagger exit
-  .to(sections[3].querySelectorAll('.mono-section-label, .section-title, .section-desc, .process-step'), {
-    y: -40,
-    opacity: 0,
-    stagger: 0.03,
-    duration: 0.3
-  }, 5.1);
+  .to(sections[3].querySelectorAll('.mono-section-label, .section-title'), { scale: 2.2, opacity: 0, duration: 0.3 }, 5.1)
+  .to(sections[3].querySelectorAll('.section-desc'), { scale: 1.7, opacity: 0, duration: 0.3 }, 5.1)
+  .to(sections[3].querySelectorAll('.process-step'), { scale: 1.4, opacity: 0, stagger: 0.03, duration: 0.3 }, 5.1);
 
   // 5. About (Section 4) transitions
   tl.to(sections[4], { 
     opacity: 1, 
-    scale: 1, 
     autoAlpha: 1, 
     pointerEvents: "auto", 
     duration: 0.3, 
     onStart: () => sections[4].classList.add('active'),
     onReverseComplete: () => sections[4].classList.remove('active')
   }, 5.6)
-  // Stagger entrance
-  .fromTo(sections[4].querySelectorAll('.mono-section-label, .section-title, .about-lead, .about-text, .specs-panel, .specs-list li'), 
-    { y: 40, opacity: 0 },
-    { y: 0, opacity: 1, stagger: 0.04, duration: 0.3, ease: "power2.out" },
-    5.6
-  )
+  // Depth entry
+  .fromTo(sections[4].querySelectorAll('.mono-section-label, .section-title'), { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 5.6)
+  .fromTo(sections[4].querySelectorAll('.about-lead, .about-text'), { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 5.6)
+  .fromTo(sections[4].querySelectorAll('.specs-panel, .specs-list li'), { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, stagger: 0.04, duration: 0.3, ease: "power2.out" }, 5.6)
+  
+  // Section 4 Exit
   .to(sections[4], { 
     opacity: 0, 
-    scale: 1.8, 
     autoAlpha: 0, 
     pointerEvents: "none", 
     duration: 0.3, 
     onStart: () => sections[4].classList.remove('active'),
     onReverseComplete: () => sections[4].classList.add('active')
   }, 6.6)
-  // Stagger exit
-  .to(sections[4].querySelectorAll('.mono-section-label, .section-title, .about-lead, .about-text, .specs-panel, .specs-list li'), {
-    y: -40,
-    opacity: 0,
-    stagger: 0.03,
-    duration: 0.3
-  }, 6.6);
+  .to(sections[4].querySelectorAll('.mono-section-label, .section-title'), { scale: 2.2, opacity: 0, duration: 0.3 }, 6.6)
+  .to(sections[4].querySelectorAll('.about-lead, .about-text'), { scale: 1.7, opacity: 0, duration: 0.3 }, 6.6)
+  .to(sections[4].querySelectorAll('.specs-panel, .specs-list li'), { scale: 1.4, opacity: 0, stagger: 0.03, duration: 0.3 }, 6.6);
 
   // 6. Contact (Section 5) transitions
   tl.to(sections[5], { 
     opacity: 1, 
-    scale: 1, 
     autoAlpha: 1, 
     pointerEvents: "auto", 
     duration: 0.3, 
     onStart: () => sections[5].classList.add('active'),
     onReverseComplete: () => sections[5].classList.remove('active')
   }, 7.1)
-  // Stagger entrance
-  .fromTo(sections[5].querySelectorAll('.mono-section-label, .section-title, .section-desc, .form-group, .form-checkbox-group, .form-actions, .info-block'), 
-    { y: 40, opacity: 0 },
-    { y: 0, opacity: 1, stagger: 0.04, duration: 0.3, ease: "power2.out" },
-    7.1
-  );
+  // Depth entry
+  .fromTo(sections[5].querySelectorAll('.mono-section-label, .section-title'), { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 7.1)
+  .fromTo(sections[5].querySelectorAll('.section-desc'), { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 7.1)
+  .fromTo(sections[5].querySelectorAll('.contact-form, .form-group, .form-checkbox-group, .form-actions'), { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, stagger: 0.04, duration: 0.3, ease: "power2.out" }, 7.1)
+  .fromTo(sections[5].querySelectorAll('.contact-info-panel, .info-block, .footer'), { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, stagger: 0.04, duration: 0.3, ease: "power2.out" }, 7.1);
 
   // Three.js animations synchronized on the same timeline
   // Phase 1: Look Left
@@ -690,58 +660,41 @@ function initBootLoader() {
       onComplete: () => {
         loader.style.display = "none";
         
-        // 2. Trigger Epic Reveal Splash
-        opening.classList.add("active");
-        
-        // 3. Keep splash active, then zoom/fade out
-        setTimeout(() => {
-          opening.classList.remove("active");
-          gsap.to(opening, {
-            opacity: 0,
-            scale: 1.3,
-            duration: 1.2,
-            ease: "power3.inOut",
-            onComplete: () => {
-              opening.style.display = "none";
-              
-              // Restore scroll track
-              document.body.style.overflow = "";
+        // Skip the big opening brand and directly boot the simulation!
+        document.body.style.overflow = "";
 
-              // Fade in Navigation Header
-              gsap.to(".header", { opacity: 1, visibility: "visible", duration: 1.2, ease: "power2.out" });
+        // Fade in Navigation Header
+        gsap.to(".header", { opacity: 1, visibility: "visible", duration: 1.2, ease: "power2.out" });
 
-              // Fade in Hero slide
-              const firstSection = document.querySelector('.cinematic-viewport section');
-              if (firstSection) {
-                gsap.to(firstSection, { 
-                  opacity: 1, 
-                  scale: 1, 
-                  autoAlpha: 1, 
-                  pointerEvents: "auto", 
-                  duration: 1.2, 
-                  ease: "power2.out", 
-                  onComplete: () => firstSection.classList.add('active') 
-                });
-                
-                // Stagger inner items of hero in (Hubtown style)
-                gsap.fromTo(firstSection.querySelectorAll('.stagger-hero-item'),
-                  { y: 40, opacity: 0 },
-                  { y: 0, opacity: 1, stagger: 0.08, duration: 1.0, ease: "power2.out" }
-                );
-              }
-
-              // Visor components fly in from edges
-              const visorPanels = document.querySelectorAll(".hud-panel");
-              const reticle = document.getElementById("reticle-center");
-              const tracker = document.getElementById("scroll-tracker");
-
-              gsap.from(visorPanels[0], { x: -300, rotationY: 90, opacity: 0, duration: 1.5, ease: "power3.out" });
-              gsap.from(visorPanels[1], { x: 300, rotationY: -90, opacity: 0, duration: 1.5, ease: "power3.out" });
-              gsap.from(reticle, { scale: 3, opacity: 0, duration: 1.2, ease: "back.out(1.7)" });
-              gsap.from(tracker, { y: 100, opacity: 0, duration: 1.5, ease: "power2.out" });
-            }
+        // Fade in Hero slide
+        const firstSection = document.querySelector('.cinematic-viewport section');
+        if (firstSection) {
+          gsap.to(firstSection, { 
+            opacity: 1, 
+            scale: 1, 
+            autoAlpha: 1, 
+            pointerEvents: "auto", 
+            duration: 1.2, 
+            ease: "power2.out", 
+            onComplete: () => firstSection.classList.add('active') 
           });
-        }, 2200);
+          
+          // Stagger inner items of hero in (Hubtown style)
+          gsap.fromTo(firstSection.querySelectorAll('.stagger-hero-item'),
+            { y: 40, opacity: 0 },
+            { y: 0, opacity: 1, stagger: 0.08, duration: 1.0, ease: "power2.out" }
+          );
+        }
+
+        // Visor components fly in from edges
+        const visorPanels = document.querySelectorAll(".hud-panel");
+        const reticle = document.getElementById("reticle-center");
+        const tracker = document.getElementById("scroll-tracker");
+
+        gsap.from(visorPanels[0], { x: -300, rotationY: 90, opacity: 0, duration: 1.5, ease: "power3.out" });
+        gsap.from(visorPanels[1], { x: 300, rotationY: -90, opacity: 0, duration: 1.5, ease: "power3.out" });
+        gsap.from(reticle, { scale: 3, opacity: 0, duration: 1.2, ease: "back.out(1.7)" });
+        gsap.from(tracker, { y: 100, opacity: 0, duration: 1.5, ease: "power2.out" });
       }
     });
   }

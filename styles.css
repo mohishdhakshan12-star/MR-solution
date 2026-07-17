@@ -1825,26 +1825,39 @@ p {
   background: transparent !important;
 }
 
-/* Smooth background cards to make slides highly readable over 3D terrain */
+/* Float text freely over 3D background grid, with zero enclosed boxes */
 .hero-content,
 .capabilities-grid,
 .project-table-wrapper,
 .process-timeline,
 .about-grid,
 .contact-grid {
-  background: rgba(10, 11, 13, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(32, 36, 44, 0.7);
-  padding: 2.5rem;
-  border-radius: 4px;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  padding: 0 !important;
 }
 
 /* Remove absolute offsets on the static schematic visual so it matches layout */
 .hero-signature-wrapper {
-  background: rgba(10, 11, 13, 0.4);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(32, 36, 44, 0.7);
-  padding: 1rem;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+/* Heavy, readable text-shadows for high contrast text floating over 3D terrain */
+.cinematic-viewport h1,
+.cinematic-viewport h2,
+.cinematic-viewport h3,
+.cinematic-viewport p,
+.cinematic-viewport li,
+.cinematic-viewport span,
+.cinematic-viewport label,
+.cinematic-viewport a,
+.cinematic-viewport td,
+.cinematic-viewport th {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95), 0 4px 16px rgba(0, 0, 0, 0.85);
 }
 
 /* Reset prefers-reduced-motion to static layout */
