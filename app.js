@@ -138,14 +138,14 @@ function initNavRedirects() {
       if (targetId.startsWith("#")) {
         e.preventDefault();
 
-        // Map section anchors to scroll-percentage heights
+        // Map section anchors to scroll-percentage heights matching the new staggered timeline
         const scrollMap = {
           "#hero": 0.0,
-          "#capabilities": 0.18,
-          "#projects": 0.38,
-          "#process": 0.58,
+          "#capabilities": 0.22,
+          "#projects": 0.41,
+          "#process": 0.59,
           "#about": 0.78,
-          "#contact": 0.98
+          "#contact": 0.96
         };
 
         const progress = scrollMap[targetId] !== undefined ? scrollMap[targetId] : 0.0;
@@ -375,7 +375,7 @@ function initHubtownThreeDScroll() {
     }
   });
 
-  // Master timeline duration: 5 units.
+  // Master timeline duration: 8.0 units.
   // 1. Hero (Section 0) transitions (fades out and scales up as we scroll past)
   tl.to(sections[0], { 
     opacity: 0, 
@@ -385,7 +385,7 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[0].classList.remove('active'),
     onReverseComplete: () => sections[0].classList.add('active')
-  }, 0.7);
+  }, 0.6);
 
   // 2. Capabilities (Section 1) transitions
   tl.to(sections[1], { 
@@ -396,7 +396,7 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[1].classList.add('active'),
     onReverseComplete: () => sections[1].classList.remove('active')
-  }, 0.7)
+  }, 1.1)
   .to(sections[1], { 
     opacity: 0, 
     scale: 1.8, 
@@ -405,7 +405,7 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[1].classList.remove('active'),
     onReverseComplete: () => sections[1].classList.add('active')
-  }, 1.5);
+  }, 2.1);
 
   // 3. Projects (Section 2) transitions
   tl.to(sections[2], { 
@@ -416,7 +416,7 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[2].classList.add('active'),
     onReverseComplete: () => sections[2].classList.remove('active')
-  }, 1.5)
+  }, 2.6)
   .to(sections[2], { 
     opacity: 0, 
     scale: 1.8, 
@@ -425,7 +425,7 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[2].classList.remove('active'),
     onReverseComplete: () => sections[2].classList.add('active')
-  }, 2.3);
+  }, 3.6);
 
   // 4. Process (Section 3) transitions
   tl.to(sections[3], { 
@@ -436,7 +436,7 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[3].classList.add('active'),
     onReverseComplete: () => sections[3].classList.remove('active')
-  }, 2.3)
+  }, 4.1)
   .to(sections[3], { 
     opacity: 0, 
     scale: 1.8, 
@@ -445,7 +445,7 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[3].classList.remove('active'),
     onReverseComplete: () => sections[3].classList.add('active')
-  }, 3.1);
+  }, 5.1);
 
   // 5. About (Section 4) transitions
   tl.to(sections[4], { 
@@ -456,7 +456,7 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[4].classList.add('active'),
     onReverseComplete: () => sections[4].classList.remove('active')
-  }, 3.1)
+  }, 5.6)
   .to(sections[4], { 
     opacity: 0, 
     scale: 1.8, 
@@ -465,7 +465,7 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[4].classList.remove('active'),
     onReverseComplete: () => sections[4].classList.add('active')
-  }, 3.9);
+  }, 6.6);
 
   // 6. Contact (Section 5) transitions
   tl.to(sections[5], { 
@@ -476,29 +476,29 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[5].classList.add('active'),
     onReverseComplete: () => sections[5].classList.remove('active')
-  }, 3.9);
+  }, 7.1);
 
   // Three.js animations synchronized on the same timeline
   // Phase 1: Look Left
-  tl.to(camera.rotation, { y: 0.35, ease: "sine.inOut" }, 0.7)
-    .to(targetMat, { opacity: 0.6, duration: 0.5 }, 0.7) 
-    .to("#status-text", { textContent: "BOGEY IDENTIFIED", duration: 0 }, 0.7);
+  tl.to(camera.rotation, { y: 0.35, ease: "sine.inOut" }, 1.1)
+    .to(targetMat, { opacity: 0.6, duration: 0.5 }, 1.1) 
+    .to("#status-text", { textContent: "BOGEY IDENTIFIED", duration: 0 }, 1.1);
     
   // Phase 2: Look Right
-  tl.to(camera.rotation, { y: -0.35, ease: "sine.inOut" }, 1.5);
+  tl.to(camera.rotation, { y: -0.35, ease: "sine.inOut" }, 2.6);
     
   // Phase 3: Lock On & Combat Mode
-  tl.to(camera.rotation, { y: 0, ease: "power2.out" }, 2.3)
-    .to("#helmet-viewport", { className: "viewport-container combat-mode", duration: 0.1 }, 2.3)
-    .to(targetMat, { opacity: 1, duration: 0.2 }, 2.3) 
-    .to("#status-text", { textContent: "COMBAT OVERRIDE", duration: 0 }, 2.3)
-    .to("#reticle-center", { scale: 0.6, rotate: 45, duration: 0.3 }, 2.3);
+  tl.to(camera.rotation, { y: 0, ease: "power2.out" }, 4.1)
+    .to("#helmet-viewport", { className: "viewport-container combat-mode", duration: 0.1 }, 4.1)
+    .to(targetMat, { opacity: 1, duration: 0.2 }, 4.1) 
+    .to("#status-text", { textContent: "COMBAT OVERRIDE", duration: 0 }, 4.1)
+    .to("#reticle-center", { scale: 0.6, rotate: 45, duration: 0.3 }, 4.1);
     
   // Phase 4: Engage Thrusters (Speed increases dynamically)
-  tl.to(camera, { fov: 90, ease: "power2.in" }, 3.1) 
-    .to(terrain.position, { y: -120, ease: "power2.in" }, 3.1) 
-    .to(flightEngine, { speed: 18, ease: "power3.in" }, 3.1) // Massive speed boost
-    .to(".ui-perspective", { opacity: 0.3, scale: 1.05, ease: "power2.in" }, 3.1); 
+  tl.to(camera, { fov: 90, ease: "power2.in" }, 5.6) 
+    .to(terrain.position, { y: -120, ease: "power2.in" }, 5.6) 
+    .to(flightEngine, { speed: 18, ease: "power3.in" }, 5.6) // Massive speed boost
+    .to(".ui-perspective", { opacity: 0.3, scale: 1.05, ease: "power2.in" }, 5.6); 
 
   // --- 6. RENDER LOOP ---
   function animate() {
