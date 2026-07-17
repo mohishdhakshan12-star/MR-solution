@@ -379,7 +379,7 @@ function initHubtownThreeDScroll() {
   });
 
   // Master timeline duration: 8.0 units.
-  // 1. Hero (Section 0) transitions (fades out and scales up as we scroll past)
+  // 1. Hero (Section 0) transitions (fades out and sweeps up as we scroll past)
   tl.to(sections[0], { 
     opacity: 0, 
     autoAlpha: 0, 
@@ -389,10 +389,9 @@ function initHubtownThreeDScroll() {
     onReverseComplete: () => sections[0].classList.add('active')
   }, 0.6);
 
-  // Stagger hero elements out at different 3D scales (flying past camera)
-  tl.to(sections[0].querySelectorAll('.mono-section-label, .hero-title'), { scale: 2.2, opacity: 0, duration: 0.3 }, 0.6)
-    .to(sections[0].querySelectorAll('.hero-desc, .btn'), { scale: 1.6, opacity: 0, duration: 0.3 }, 0.6)
-    .to(sections[0].querySelectorAll('.hero-signature-wrapper'), { scale: 1.3, opacity: 0, duration: 0.3 }, 0.6);
+  // Sweep hero elements up and out
+  tl.to("#hero .mono-section-label, #hero .hero-title, #hero .hero-desc, #hero .hero-actions-row", { y: -50, opacity: 0, duration: 0.3 }, 0.6)
+    .to("#hero .hero-signature-wrapper", { y: -50, opacity: 0, duration: 0.3 }, 0.6);
 
   // 2. Capabilities (Section 1) transitions
   tl.to(sections[1], { 
@@ -403,12 +402,11 @@ function initHubtownThreeDScroll() {
     onStart: () => sections[1].classList.add('active'),
     onReverseComplete: () => sections[1].classList.remove('active')
   }, 1.1)
-  // Hubtown-style depth entry (zoom from distance 0.3 to 1.0)
-  .fromTo(sections[1].querySelectorAll('.mono-section-label, .section-title'), { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 1.1)
-  .fromTo(sections[1].querySelectorAll('.section-desc'), { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 1.1)
-  .fromTo(sections[1].querySelectorAll('.capability-card'), { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, stagger: 0.05, duration: 0.3, ease: "power2.out" }, 1.1)
+  // Clean translation entrance (no scale distortion)
+  .fromTo("#capabilities .section-header", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 1.1)
+  .fromTo("#capabilities .capability-card", { y: 40, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.05, duration: 0.3, ease: "power2.out" }, 1.1)
   
-  // Section 1 Exit (zoom out past viewer)
+  // Section 1 Exit
   .to(sections[1], { 
     opacity: 0, 
     autoAlpha: 0, 
@@ -417,9 +415,8 @@ function initHubtownThreeDScroll() {
     onStart: () => sections[1].classList.remove('active'),
     onReverseComplete: () => sections[1].classList.add('active')
   }, 2.1)
-  .to(sections[1].querySelectorAll('.mono-section-label, .section-title'), { scale: 2.2, opacity: 0, duration: 0.3 }, 2.1)
-  .to(sections[1].querySelectorAll('.section-desc'), { scale: 1.7, opacity: 0, duration: 0.3 }, 2.1)
-  .to(sections[1].querySelectorAll('.capability-card'), { scale: 1.4, opacity: 0, stagger: 0.03, duration: 0.3 }, 2.1);
+  .to("#capabilities .section-header", { y: -50, opacity: 0, duration: 0.3 }, 2.1)
+  .to("#capabilities .capability-card", { y: -50, opacity: 0, stagger: 0.03, duration: 0.3 }, 2.1);
 
   // 3. Projects (Section 2) transitions
   tl.to(sections[2], { 
@@ -430,10 +427,9 @@ function initHubtownThreeDScroll() {
     onStart: () => sections[2].classList.add('active'),
     onReverseComplete: () => sections[2].classList.remove('active')
   }, 2.6)
-  // Depth entry
-  .fromTo(sections[2].querySelectorAll('.mono-section-label, .section-title'), { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 2.6)
-  .fromTo(sections[2].querySelectorAll('.section-desc'), { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 2.6)
-  .fromTo(sections[2].querySelectorAll('.project-table-wrapper, .project-row'), { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, stagger: 0.05, duration: 0.3, ease: "power2.out" }, 2.6)
+  // Clean translation entrance
+  .fromTo("#projects .section-header", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 2.6)
+  .fromTo("#projects .project-table-wrapper", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 2.6)
   
   // Section 2 Exit
   .to(sections[2], { 
@@ -444,9 +440,8 @@ function initHubtownThreeDScroll() {
     onStart: () => sections[2].classList.remove('active'),
     onReverseComplete: () => sections[2].classList.add('active')
   }, 3.6)
-  .to(sections[2].querySelectorAll('.mono-section-label, .section-title'), { scale: 2.2, opacity: 0, duration: 0.3 }, 3.6)
-  .to(sections[2].querySelectorAll('.section-desc'), { scale: 1.7, opacity: 0, duration: 0.3 }, 3.6)
-  .to(sections[2].querySelectorAll('.project-table-wrapper, .project-row'), { scale: 1.4, opacity: 0, stagger: 0.03, duration: 0.3 }, 3.6);
+  .to("#projects .section-header", { y: -50, opacity: 0, duration: 0.3 }, 3.6)
+  .to("#projects .project-table-wrapper", { y: -50, opacity: 0, duration: 0.3 }, 3.6);
 
   // 4. Process (Section 3) transitions
   tl.to(sections[3], { 
@@ -457,10 +452,9 @@ function initHubtownThreeDScroll() {
     onStart: () => sections[3].classList.add('active'),
     onReverseComplete: () => sections[3].classList.remove('active')
   }, 4.1)
-  // Depth entry
-  .fromTo(sections[3].querySelectorAll('.mono-section-label, .section-title'), { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 4.1)
-  .fromTo(sections[3].querySelectorAll('.section-desc'), { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 4.1)
-  .fromTo(sections[3].querySelectorAll('.process-step'), { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, stagger: 0.05, duration: 0.3, ease: "power2.out" }, 4.1)
+  // Clean translation entrance
+  .fromTo("#process .section-header", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 4.1)
+  .fromTo("#process .process-step", { y: 40, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.05, duration: 0.3, ease: "power2.out" }, 4.1)
   
   // Section 3 Exit
   .to(sections[3], { 
@@ -471,9 +465,8 @@ function initHubtownThreeDScroll() {
     onStart: () => sections[3].classList.remove('active'),
     onReverseComplete: () => sections[3].classList.add('active')
   }, 5.1)
-  .to(sections[3].querySelectorAll('.mono-section-label, .section-title'), { scale: 2.2, opacity: 0, duration: 0.3 }, 5.1)
-  .to(sections[3].querySelectorAll('.section-desc'), { scale: 1.7, opacity: 0, duration: 0.3 }, 5.1)
-  .to(sections[3].querySelectorAll('.process-step'), { scale: 1.4, opacity: 0, stagger: 0.03, duration: 0.3 }, 5.1);
+  .to("#process .section-header", { y: -50, opacity: 0, duration: 0.3 }, 5.1)
+  .to("#process .process-step", { y: -50, opacity: 0, stagger: 0.03, duration: 0.3 }, 5.1);
 
   // 5. About (Section 4) transitions
   tl.to(sections[4], { 
@@ -484,10 +477,9 @@ function initHubtownThreeDScroll() {
     onStart: () => sections[4].classList.add('active'),
     onReverseComplete: () => sections[4].classList.remove('active')
   }, 5.6)
-  // Depth entry
-  .fromTo(sections[4].querySelectorAll('.mono-section-label, .section-title'), { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 5.6)
-  .fromTo(sections[4].querySelectorAll('.about-lead, .about-text'), { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 5.6)
-  .fromTo(sections[4].querySelectorAll('.specs-panel, .specs-list li'), { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, stagger: 0.04, duration: 0.3, ease: "power2.out" }, 5.6)
+  // Clean columns entrance (About Narrative left, Specs Panel right)
+  .fromTo("#about .about-narrative", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 5.6)
+  .fromTo("#about .specs-panel", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 5.6)
   
   // Section 4 Exit
   .to(sections[4], { 
@@ -498,9 +490,8 @@ function initHubtownThreeDScroll() {
     onStart: () => sections[4].classList.remove('active'),
     onReverseComplete: () => sections[4].classList.add('active')
   }, 6.6)
-  .to(sections[4].querySelectorAll('.mono-section-label, .section-title'), { scale: 2.2, opacity: 0, duration: 0.3 }, 6.6)
-  .to(sections[4].querySelectorAll('.about-lead, .about-text'), { scale: 1.7, opacity: 0, duration: 0.3 }, 6.6)
-  .to(sections[4].querySelectorAll('.specs-panel, .specs-list li'), { scale: 1.4, opacity: 0, stagger: 0.03, duration: 0.3 }, 6.6);
+  .to("#about .about-narrative", { y: -50, opacity: 0, duration: 0.3 }, 6.6)
+  .to("#about .specs-panel", { y: -50, opacity: 0, duration: 0.3 }, 6.6);
 
   // 6. Contact (Section 5) transitions
   tl.to(sections[5], { 
@@ -511,11 +502,10 @@ function initHubtownThreeDScroll() {
     onStart: () => sections[5].classList.add('active'),
     onReverseComplete: () => sections[5].classList.remove('active')
   }, 7.1)
-  // Depth entry
-  .fromTo(sections[5].querySelectorAll('.mono-section-label, .section-title'), { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 7.1)
-  .fromTo(sections[5].querySelectorAll('.section-desc'), { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, 7.1)
-  .fromTo(sections[5].querySelectorAll('.contact-form, .form-group, .form-checkbox-group, .form-actions'), { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, stagger: 0.04, duration: 0.3, ease: "power2.out" }, 7.1)
-  .fromTo(sections[5].querySelectorAll('.contact-info-panel, .info-block, .footer'), { scale: 0.3, opacity: 0 }, { scale: 1, opacity: 1, stagger: 0.04, duration: 0.3, ease: "power2.out" }, 7.1);
+  // Clean columns entrance (Header, Left Form, Right Details)
+  .fromTo("#contact .section-header", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 7.1)
+  .fromTo("#contact .contact-form", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 7.1)
+  .fromTo("#contact .contact-info-panel", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 7.1);
 
   // Three.js animations synchronized on the same timeline
   // Phase 1: Look Left

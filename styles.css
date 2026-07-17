@@ -1797,11 +1797,19 @@ p {
   background: transparent !important;
 }
 
-/* Float text freely over 3D background grid, with zero enclosed boxes */
+/* Restore structured blueprint panels for primary single-column slides */
 .hero-content,
 .capabilities-grid,
 .project-table-wrapper,
-.process-timeline,
+.process-timeline {
+  background: rgba(10, 11, 13, 0.65) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(193, 154, 91, 0.25) !important;
+  padding: 2.5rem !important;
+  border-radius: 4px;
+}
+
+/* Keep double-column grids transparent to display left and right content panels cleanly side-by-side */
 .about-grid,
 .contact-grid {
   background: transparent !important;
