@@ -1880,3 +1880,162 @@ p {
     backdrop-filter: none !important;
   }
 }
+
+/* --- BOOT LOADER & LOGO REVEAL OVERLAYS --- */
+#boot-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #010203;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Rajdhani', sans-serif;
+  color: var(--visor-cyan);
+}
+
+.loader-content {
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.loader-logo {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 12px;
+  margin-bottom: 2rem;
+  color: var(--visor-cyan);
+  text-shadow: 0 0 15px rgba(58, 143, 183, 0.6);
+  text-transform: uppercase;
+}
+
+.loader-status {
+  font-size: 0.8rem;
+  letter-spacing: 4px;
+  margin-bottom: 1rem;
+  opacity: 0.8;
+}
+
+.loader-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(58, 143, 183, 0.1);
+  border-radius: 2px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.loader-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--visor-cyan);
+  box-shadow: 0 0 8px var(--visor-cyan);
+  transition: width 0.1s linear;
+}
+
+.loader-terminal {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(58, 143, 183, 0.2);
+  height: 120px;
+  padding: 10px;
+  overflow-y: auto;
+  color: rgba(58, 143, 183, 0.7);
+  margin-bottom: 2rem;
+}
+
+#btn-enter-simulation {
+  background: transparent;
+  border: 1px solid var(--visor-cyan);
+  color: var(--visor-cyan);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 4px;
+  padding: 12px 30px;
+  cursor: none !important;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(58, 143, 183, 0.2);
+}
+
+#btn-enter-simulation:hover {
+  background: var(--visor-cyan);
+  color: #000;
+  box-shadow: 0 0 20px var(--visor-cyan);
+}
+
+/* Big Opening Splash Card */
+#big-opening-brand {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #010203;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  font-family: 'Rajdhani', sans-serif;
+  transition: opacity 1s ease, visibility 1s ease;
+}
+
+.opening-logo {
+  font-size: 6rem;
+  font-weight: 700;
+  letter-spacing: 24px;
+  color: #fff;
+  text-shadow: 0 0 30px rgba(58, 143, 183, 0.8);
+  transform: scale(0.8);
+  opacity: 0;
+  transition: transform 2s cubic-bezier(0.16, 1, 0.3, 1), opacity 2s ease;
+}
+
+.opening-sub {
+  font-size: 1.1rem;
+  letter-spacing: 8px;
+  color: var(--visor-cyan);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: transform 2.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 2.5s ease;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* Active states for animation triggers */
+#big-opening-brand.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+#big-opening-brand.active .opening-logo {
+  transform: scale(1.0);
+  opacity: 1;
+}
+
+#big-opening-brand.active .opening-sub {
+  transform: translateY(0);
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .opening-logo {
+    font-size: 3rem;
+    letter-spacing: 10px;
+  }
+  .opening-sub {
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    padding: 0 10px;
+  }
+}

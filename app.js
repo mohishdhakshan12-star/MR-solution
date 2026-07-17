@@ -8,6 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Check for prefers-reduced-motion
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // Boot loader sequence
+  initBootLoader();
+
   // Initialize UI components first
   initMobileMenu();
   initContactForm();
@@ -547,4 +550,105 @@ function initHubtownThreeDScroll() {
   });
 
   animate();
+}
+
+/* --------------------------------------------------
+   CINEMATIC SYSTEM BOOT SEQUENCE
+   -------------------------------------------------- */
+function initBootLoader() {
+  const loader = document.getElementById("boot-loader");
+  const fill = document.getElementById("loader-fill-bar");
+  const log = document.getElementById("loader-terminal-log");
+  const btn = document.getElementById("btn-enter-simulation");
+  const status = document.querySelector(".loader-status");
+  const opening = document.getElementById("big-opening-brand");
+
+  if (!loader || !fill || !log || !btn) return;
+
+  // Disable scroll at boot
+  document.body.style.overflow = "hidden";
+
+  const logLines = [
+    "BOOT PROTOCOL 0x7E3... ACTIVE",
+    "ESTABLISHING SECURE CONNECTION TO CLIENT NODE...",
+    "RETRIEVING GEOMETRIC COORDINATES...",
+    "PROCEDURAL WIREFRAME GRID: LOADING...",
+    "ATMOSPHERIC DATA LAYER INITIATED... OK",
+    "J.A.R.V.I.S. PILOT INTERACTION MODULE: ONLINE",
+    "REPULSORS AT 100% ENERGY DENSITY... READY",
+    "ALL CORE SYSTEMS NOMINAL"
+  ];
+
+  let progress = 0;
+  let logIndex = 0;
+
+  // Add printed lines dynamically
+  const printInterval = setInterval(() => {
+    if (logIndex < logLines.length) {
+      const p = document.createElement("p");
+      p.textContent = `> ${logLines[logIndex]}`;
+      log.appendChild(p);
+      log.scrollTop = log.scrollHeight;
+      logIndex++;
+    }
+  }, 250);
+
+  // Animate loader bar
+  const progressInterval = setInterval(() => {
+    if (progress < 100) {
+      progress += Math.floor(Math.random() * 5) + 3;
+      if (progress > 100) progress = 100;
+      fill.style.width = `${progress}%`;
+    } else {
+      clearInterval(progressInterval);
+      clearInterval(printInterval);
+      status.textContent = "COGNITIVE STACK LOADED. AWAITING USER COMMAND.";
+      btn.style.display = "inline-block";
+    }
+  }, 80);
+
+  // Click Handler for simulation entrance
+  btn.addEventListener("click", () => {
+    // 1. Zoom and fade out loader
+    gsap.to(loader, {
+      opacity: 0,
+      scale: 1.1,
+      duration: 0.8,
+      ease: "power2.out",
+      onComplete: () => {
+        loader.style.display = "none";
+        
+        // 2. Trigger Epic Reveal Splash
+        opening.classList.add("active");
+        
+        // 3. Keep splash active for 2.5 seconds, then zoom/fade out
+        setTimeout(() => {
+          opening.classList.remove("active");
+          gsap.to(opening, {
+            opacity: 0,
+            scale: 1.3,
+            duration: 1.2,
+            ease: "power3.inOut",
+            onComplete: () => {
+              opening.style.display = "none";
+              
+              // Restore scroll track after splash screen resolves
+              document.body.style.overflow = "";
+
+              // 4. Set helmet UI to visible and animate visor entrance!
+              const visorPanels = document.querySelectorAll(".hud-panel");
+              const reticle = document.getElementById("reticle-center");
+              const tracker = document.getElementById("scroll-tracker");
+
+              // Visor components fly in from edges
+              gsap.from(visorPanels[0], { x: -300, rotationY: 90, opacity: 0, duration: 1.5, ease: "power3.out" });
+              gsap.from(visorPanels[1], { x: 300, rotationY: -90, opacity: 0, duration: 1.5, ease: "power3.out" });
+              gsap.from(reticle, { scale: 3, opacity: 0, duration: 1.2, ease: "back.out(1.7)" });
+              gsap.from(tracker, { y: 100, opacity: 0, duration: 1.5, ease: "power2.out" });
+            }
+          });
+        }, 2800);
+      }
+    });
+  });
 }
