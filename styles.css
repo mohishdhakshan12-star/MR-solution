@@ -1784,7 +1784,7 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
+  /* Transitions and transforms handled dynamically by GSAP scrub */
 }
 
 .cinematic-viewport section.active {
