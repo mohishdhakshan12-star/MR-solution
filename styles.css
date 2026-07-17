@@ -11,6 +11,12 @@
   --color-copper: #d37546;       /* Raw copper */
   --color-copper-glow: #ff8c42;  /* Radiant high-temp copper */
   --color-brass: #b58a55;        /* Dull brass / schematic gold */
+
+  /* J.A.R.V.I.S. Visor Palette */
+  --visor-cyan: #3a8fb7;
+  --combat-red: #d93829;
+  --muted-amber: #b07c46;
+  --bg-void: #010203;
   
   --text-primary: #f1f5f9;      /* Pure slate white */
   --text-secondary: #94a3b8;    /* Muted cool grey */
@@ -55,6 +61,12 @@ body {
   overflow-x: hidden;
   position: relative;
   min-height: 100vh;
+  cursor: none; /* Hide default OS cursor */
+}
+
+/* Ensure custom cursor experience across all interactions */
+a, button, input, select, textarea, label {
+  cursor: none !important;
 }
 
 /* Custom Scrollbar */
@@ -130,25 +142,245 @@ select:focus-visible {
   border-left: 1px solid var(--text-muted);
 }
 
-/* --- High-Fidelity 3D Pinning Viewport --- */
-.bg-blueprint-container {
+/* --- CUSTOM J.A.R.V.I.S. CURSOR --- */
+#custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(58, 143, 183, 0.8);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s, border-color 0.4s;
+  box-shadow: 0 0 10px rgba(58, 143, 183, 0.2);
+}
+#custom-cursor::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: var(--visor-cyan);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 8px var(--visor-cyan);
+  transition: background 0.4s, box-shadow 0.4s;
+}
+#custom-cursor::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -10px;
+  width: 44px;
+  height: 1px;
+  background: rgba(58, 143, 183, 0.3);
+  transform: translateY(-50%);
+  transition: background 0.4s;
+}
+.combat-mode #custom-cursor {
+  border-color: rgba(217, 56, 41, 0.8);
+  box-shadow: 0 0 10px rgba(217, 56, 41, 0.2);
+}
+.combat-mode #custom-cursor::after {
+  background: var(--combat-red);
+  box-shadow: 0 0 8px var(--combat-red);
+}
+.combat-mode #custom-cursor::before {
+  background: rgba(217, 56, 41, 0.3);
+}
+
+/* Fixed Visor Viewport (layered behind scrolling text content) */
+.viewport-container {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1;
-  background-color: #0a0b0d; /* Sheet metal charcoal base */
+  z-index: -1; /* Place behind text content */
   overflow: hidden;
+  background-color: var(--bg-void);
+  pointer-events: none; /* Clicks pass straight through to scrolling page content */
 }
 
-#blueprint-3d-stage {
-  display: block;
+#webgl-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
+  z-index: 1;
 }
 
-/* Subtle architectural scanline overlay to enhance the blueprint feel */
+/* --- 1. THE HELMET MASK --- */
+.helmet-interior {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.95) 85%, #000 100%);
+  box-shadow: inset 0 0 150px rgba(0, 0, 0, 1);
+}
+
+.helmet-jaw-left,
+.helmet-jaw-right {
+  position: absolute;
+  bottom: -50px;
+  width: 40vw;
+  height: 200px;
+  background: #000;
+  z-index: 51;
+  filter: blur(12px);
+  pointer-events: none;
+}
+.helmet-jaw-left { left: -10vw; transform: rotate(15deg); }
+.helmet-jaw-right { right: -10vw; transform: rotate(-15deg); }
+
+.visor-glass {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 15;
+  background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.03) 0%, transparent 40%);
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* --- 2. CURVED 3D UI --- */
+.ui-perspective {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  perspective: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.hud-panel {
+  position: absolute;
+  padding: 20px;
+  width: 250px;
+  border-top: 1px solid rgba(58, 143, 183, 0.3);
+  border-bottom: 1px solid rgba(58, 143, 183, 0.1);
+  background: linear-gradient(to bottom, rgba(58, 143, 183, 0.05), transparent);
+  transition: border-color 0.4s, color 0.4s, background 0.4s;
+  color: var(--visor-cyan);
+  pointer-events: none;
+}
+
+.panel-left {
+  left: 6%;
+  transform: rotateY(35deg) translateZ(100px);
+  text-align: left;
+  border-left: 2px solid var(--visor-cyan);
+}
+
+.panel-right {
+  right: 6%;
+  transform: rotateY(-35deg) translateZ(100px);
+  text-align: right;
+  border-right: 2px solid var(--visor-cyan);
+}
+
+.hud-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+
+.hud-data {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 1px;
+  margin: 5px 0;
+}
+
+.power-bar-container {
+  width: 100%;
+  height: 4px;
+  background: rgba(58, 143, 183, 0.1);
+  margin-top: 10px;
+}
+
+.power-bar-fill {
+  height: 100%;
+  background: var(--visor-cyan);
+  width: 85%;
+  transition: background 0.4s;
+}
+
+/* --- 3. TARGETING RETICLE --- */
+.eye-reticle {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 1px dashed rgba(58, 143, 183, 0.4);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: border-color 0.4s, transform 0.2s;
+  pointer-events: none;
+}
+.eye-reticle::after {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: var(--visor-cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--visor-cyan);
+  transition: background 0.4s, box-shadow 0.4s;
+}
+
+#scroll-tracker {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px;
+  letter-spacing: 6px;
+  color: rgba(58, 143, 183, 0.5);
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+
+/* Combat Mode Overrides */
+.combat-mode .hud-panel {
+  border-color: var(--combat-red);
+  color: var(--combat-red);
+  background: linear-gradient(to bottom, rgba(217, 56, 41, 0.05), transparent);
+}
+.combat-mode .power-bar-fill {
+  background: var(--combat-red);
+}
+.combat-mode .eye-reticle {
+  border-color: var(--combat-red);
+}
+.combat-mode .eye-reticle::after {
+  background: var(--combat-red);
+  box-shadow: 0 0 10px var(--combat-red);
+}
+
+/* Scanline / Glitch Layer */
 .schematic-glitch-overlay {
   position: absolute;
   top: 0;
@@ -158,11 +390,20 @@ select:focus-visible {
   pointer-events: none;
   background: linear-gradient(rgba(18, 20, 24, 0) 99%, rgba(66, 75, 88, 0.05) 100%);
   background-size: 100% 4px;
+  z-index: 2;
 }
 
-/* De-activate engine overhead safely if user profile restricts movement profiles */
+/* De-activate engine overhead safely if user profile restricts motion */
 @media (prefers-reduced-motion: reduce) {
-  .bg-blueprint-container { display: none; }
+  .viewport-container {
+    display: none !important;
+  }
+  body {
+    cursor: auto !important;
+  }
+  #custom-cursor {
+    display: none !important;
+  }
 }
 
 /* Typography elements */

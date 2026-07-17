@@ -341,116 +341,189 @@ function initContactForm() {
 function initHubtownThreeDScroll() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const canvas = document.querySelector('#blueprint-3d-stage');
+  const canvas = document.getElementById('webgl-canvas');
   if (!canvas) return;
 
-  // 1. Scene Setup
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x0a0b0d, 0.015); // Emulate Hubtown structural depth fade
+  scene.fog = new THREE.FogExp2(0x010203, 0.0035); // Dense fog hides the horizon edge
 
-  // 2. Camera Coordinates
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.z = 0; // Baseline Z-axis indexing
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2500);
+  camera.position.set(0, 0, 0);
 
-  // 3. WebGL Renderer Initialization
   const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  // 4. Build Engineering Circuit Tunnel Geometry
-  const tunnelSegments = 60;
-  const points = [];
+  // --- 3. TOPOGRAPHICAL TERRAIN ---
+  // Procedural mountain/valley displacement
+  const gridGeo = new THREE.PlaneGeometry(2500, 2500, 80, 80);
+  const posAttribute = gridGeo.attributes.position;
   
-  // Generate a smooth mathematical line track for the tunnel path
-  for (let i = 0; i < tunnelSegments; i++) {
-    points.push(new THREE.Vector3(
-      Math.sin(i * 0.1) * 5, 
-      Math.cos(i * 0.1) * 2, 
-      i * 8
-    ));
+  for (let i = 0; i < posAttribute.count; i++) {
+    let x = posAttribute.getX(i);
+    let y = posAttribute.getY(i);
+    // Math-based terrain generation (Sine/Cosine waves)
+    let z = Math.sin(x * 0.003) * Math.cos(y * 0.003) * 80 + Math.sin(x * 0.01) * 20;
+    posAttribute.setZ(i, z);
   }
-  
-  const tunnelPath = new THREE.CatmullRomCurve3(points);
-  
-  // Create a clean, structural cylinder mesh framework around the track
-  const tubeGeometry = new THREE.TubeGeometry(tunnelPath, 100, 4, 12, false);
-  
-  // Wireframe material rendering in your signature Plated Brass & Physical Copper tones
-  const wireframeMaterial = new THREE.MeshBasicMaterial({
-    color: 0xc19a5b, // Plated Brass hex value
-    wireframe: true,
-    transparent: true,
-    opacity: 0.07
-  });
-  
-  const tunnelMesh = new THREE.Mesh(tubeGeometry, wireframeMaterial);
-  scene.add(tunnelMesh);
+  gridGeo.computeVertexNormals();
 
-  // Add glowing data terminal ring nodes down the line
-  const particleCount = 200;
-  const particleGeometry = new THREE.BufferGeometry();
-  const positions = new Float32Array(particleCount * 3);
+  const gridMat = new THREE.MeshBasicMaterial({ color: 0x3a8fb7, wireframe: true, transparent: true, opacity: 0.12 });
+  const terrain = new THREE.Mesh(gridGeo, gridMat);
+  terrain.rotation.x = -Math.PI / 2;
+  terrain.position.y = -80; // Distance below the camera
+  scene.add(terrain);
 
-  for (let i = 0; i < particleCount; i++) {
-    const t = i / particleCount;
-    const pos = tunnelPath.getPointAt(t);
-    const angle = Math.random() * Math.PI * 2;
-    const radius = 3.8 + Math.random() * 0.4; // Frame tightly along the tube walls
-    
-    positions[i * 3] = pos.x + Math.sin(angle) * radius;
-    positions[i * 3 + 1] = pos.y + Math.cos(angle) * radius;
-    positions[i * 3 + 2] = pos.z;
+  // High-altitude atmospheric dust
+  const particleGeo = new THREE.BufferGeometry();
+  const pCount = 1500;
+  const pPos = new Float32Array(pCount * 3);
+  for(let i=0; i < pCount * 3; i+=3) {
+    pPos[i] = (Math.random() - 0.5) * 800;   
+    pPos[i+1] = (Math.random() - 0.5) * 800; 
+    pPos[i+2] = -Math.random() * 1500;       
   }
-
-  particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  const particleMaterial = new THREE.PointsMaterial({
-    color: 0xff9d5c, // Energized copper glow hex value
-    size: 0.08,
-    transparent: true,
-    opacity: 0.4
-  });
-  
-  const particles = new THREE.Points(particleGeometry, particleMaterial);
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  const particleMat = new THREE.PointsMaterial({ color: 0xffffff, size: 1.2, transparent: true, opacity: 0.3 });
+  const particles = new THREE.Points(particleGeo, particleMat);
   scene.add(particles);
 
-  // 5. Connect Camera Flight Path directly to GSAP ScrollTrigger
-  const totalLength = points[points.length - 1].z;
+  // Target Bogeys (Wireframe Octahedrons)
+  const targetGroup = new THREE.Group();
+  scene.add(targetGroup);
+  
+  const targetMat = new THREE.MeshBasicMaterial({ color: 0xd93829, wireframe: true, transparent: true, opacity: 0 }); 
+  
+  const target1 = new THREE.Mesh(new THREE.OctahedronGeometry(15, 0), targetMat);
+  target1.position.set(-200, 20, -500); 
+  targetGroup.add(target1);
 
-  gsap.to(camera.position, {
-    z: totalLength - 15,
-    ease: "none",
+  const target2 = new THREE.Mesh(new THREE.OctahedronGeometry(20, 0), targetMat);
+  target2.position.set(250, -30, -600); 
+  targetGroup.add(target2);
+
+  // --- 4. HEAD-TRACKING LOGIC ---
+  let normX = 0; let normY = 0;
+  document.addEventListener('mousemove', (e) => {
+    normX = (e.clientX - window.innerWidth / 2) * 0.001;
+    normY = (e.clientY - window.innerHeight / 2) * 0.001;
+    
+    // Animate center eye-reticle to follow gaze slightly
+    gsap.to("#reticle-center", {
+      x: normX * 80,
+      y: normY * 80,
+      duration: 0.2
+    });
+
+    // Helmet perspective sway
+    gsap.to("#visor-ui", {
+      rotationY: normX * 12,
+      rotationX: -normY * 12,
+      duration: 0.5,
+      ease: "power2.out"
+    });
+  });
+
+  // Custom cursor movement
+  const cursor = document.getElementById('custom-cursor');
+  if (cursor) {
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    document.addEventListener('mousedown', () => gsap.to(cursor, { scale: 0.7, duration: 0.1 }));
+    document.addEventListener('mouseup', () => gsap.to(cursor, { scale: 1, duration: 0.2, ease: "back.out(2)" }));
+  }
+
+  // --- 5. FLIGHT DYNAMICS & GSAP SCROLL ---
+  const flightEngine = { speed: 1.5 }; // Slow cruising speed
+
+  const tl = gsap.timeline({
     scrollTrigger: {
       trigger: "body",
       start: "top top",
       end: "bottom bottom",
-      scrub: 0.8, // Smooth momentum tracking delay
+      scrub: 1.5,
       onUpdate: (self) => {
-        // Direct the camera to look along the curve of the tunnel path based on scroll step
-        const progress = self.progress * 0.95;
-        const lookTarget = tunnelPath.getPointAt(Math.min(progress + 0.05, 1));
-        const currentPos = tunnelPath.getPointAt(progress);
-        
-        // Dynamically shift camera offsets slightly off-center for rich 3D depth parallax
-        camera.position.x = currentPos.x;
-        camera.position.y = currentPos.y + 0.2;
-        camera.lookAt(lookTarget);
+        const tracker = document.getElementById('scroll-tracker');
+        if (tracker) {
+          if (self.progress > 0.05) {
+            tracker.style.opacity = '0';
+          } else {
+            tracker.style.opacity = '0.5';
+          }
+        }
       }
     }
   });
 
-  // 6. Handle Frame Resizing
+  // Phase 1: Look Left
+  tl.to(camera.rotation, { y: 0.35, ease: "sine.inOut" }, 0)
+    .to(targetMat, { opacity: 0.6, duration: 0.5 }, 0) 
+    .to("#status-text", { textContent: "BOGEY IDENTIFIED", duration: 0 }, 0)
+    
+  // Phase 2: Look Right
+  tl.to(camera.rotation, { y: -0.35, ease: "sine.inOut" }, 1)
+    
+  // Phase 3: Lock On & Combat Mode
+  tl.to(camera.rotation, { y: 0, ease: "power2.out" }, 2)
+    .to("#helmet-viewport", { className: "viewport-container combat-mode", duration: 0.1 }, 2)
+    .to(targetMat, { opacity: 1, duration: 0.2 }, 2) 
+    .to("#status-text", { textContent: "COMBAT OVERRIDE", duration: 0 }, 2)
+    .to("#reticle-center", { scale: 0.6, rotate: 45, duration: 0.3 }, 2) 
+    
+  // Phase 4: Engage Thrusters (Speed increases dynamically)
+  tl.to(camera, { fov: 90, ease: "power2.in" }, 3) 
+    .to(terrain.position, { y: -120, ease: "power2.in" }, 3) 
+    .to(flightEngine, { speed: 18, ease: "power3.in" }, 3) // Massive speed boost
+    .to(".ui-perspective", { opacity: 0.3, scale: 1.05, ease: "power2.in" }, 3); 
+
+  // --- 6. RENDER LOOP ---
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // Simulate head sway mapped to mouse
+    camera.position.x += (normX * 15 - camera.position.x) * 0.05;
+    camera.position.y += (-normY * 15 - camera.position.y) * 0.05;
+
+    // Move particles based on dynamic engine speed
+    const positions = particles.geometry.attributes.position.array;
+    for(let i=2; i < pCount * 3; i+=3) {
+      positions[i] += flightEngine.speed;
+      if(positions[i] > 100) positions[i] = -1500; 
+    }
+    particles.geometry.attributes.position.needsUpdate = true;
+
+    // Scroll the topographical terrain seamlessly
+    terrain.position.z += flightEngine.speed;
+    if(terrain.position.z > 60) terrain.position.z = 0; // Seamless loop reset
+
+    // Spin target bogeys
+    target1.rotation.y += 0.01;
+    target1.rotation.x += 0.005;
+    target2.rotation.y -= 0.01;
+
+    camera.updateProjectionMatrix();
+    renderer.render(scene, camera);
+  }
+
+  // Tickers
+  const repInterval = setInterval(() => {
+    const rep = document.getElementById('val-rep');
+    if (rep) rep.innerText = Math.floor(80 + Math.random() * 8);
+  }, 200);
+
+  const altInterval = setInterval(() => {
+    const alt = document.getElementById('val-alt');
+    if (alt) alt.innerText = Math.floor(42000 + Math.random() * 150).toLocaleString();
+  }, 800);
+
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  // 7. Render Loop Engine
-  function animate() {
-    requestAnimationFrame(animate);
-    // Add micro-rotation down the wireframe tunnel for active telemetry feel
-    tunnelMesh.rotation.z += 0.0005;
-    renderer.render(scene, camera);
-  }
   animate();
 }
