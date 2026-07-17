@@ -620,11 +620,10 @@ function initBootLoader() {
   const loader = document.getElementById("boot-loader");
   const percentText = document.getElementById("loader-percent-val");
   const statusText = document.getElementById("loader-status-msg");
-  const btn = document.getElementById("btn-enter-simulation");
   const opening = document.getElementById("big-opening-brand");
   const blocks = document.querySelectorAll(".loader-block-dot");
 
-  if (!loader || !percentText || !statusText || !btn || !opening || blocks.length === 0) return;
+  if (!loader || !percentText || !statusText || !opening || blocks.length === 0) return;
 
   // Disable scroll at boot
   document.body.style.overflow = "hidden";
@@ -672,19 +671,16 @@ function initBootLoader() {
       }
     },
     onComplete: () => {
-      // Hide status labels and show command button
-      gsap.to(statusText, { opacity: 0, duration: 0.3 });
-      gsap.to(percentText, { opacity: 0, duration: 0.3, onComplete: () => {
-        percentText.style.display = "none";
-        statusText.style.display = "none";
-        btn.style.display = "inline-block";
-        gsap.from(btn, { opacity: 0, scale: 0.9, duration: 0.5, ease: "back.out(1.5)" });
-      }});
+      // Hide status labels and immediately auto-launch the simulation
+      gsap.to([statusText, percentText], { 
+        opacity: 0, 
+        duration: 0.3, 
+        onComplete: launchSimulation 
+      });
     }
   });
 
-  // Enter click handler
-  btn.addEventListener("click", () => {
+  function launchSimulation() {
     // 1. Zoom and fade out loader
     gsap.to(loader, {
       opacity: 0,
@@ -748,5 +744,5 @@ function initBootLoader() {
         }, 2200);
       }
     });
-  });
+  }
 }
