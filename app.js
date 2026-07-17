@@ -390,6 +390,14 @@ function initHubtownThreeDScroll() {
     onReverseComplete: () => sections[0].classList.add('active')
   }, 0.6);
 
+  // Stagger hero out
+  tl.to(sections[0].querySelectorAll('.stagger-hero-item'), {
+    y: -40,
+    opacity: 0,
+    stagger: 0.05,
+    duration: 0.3
+  }, 0.6);
+
   // 2. Capabilities (Section 1) transitions
   tl.to(sections[1], { 
     opacity: 1, 
@@ -400,6 +408,12 @@ function initHubtownThreeDScroll() {
     onStart: () => sections[1].classList.add('active'),
     onReverseComplete: () => sections[1].classList.remove('active')
   }, 1.1)
+  // Hubtown-style stagger entrance
+  .fromTo(sections[1].querySelectorAll('.mono-section-label, .section-title, .section-desc, .capability-card'), 
+    { y: 40, opacity: 0 },
+    { y: 0, opacity: 1, stagger: 0.05, duration: 0.3, ease: "power2.out" },
+    1.1
+  )
   .to(sections[1], { 
     opacity: 0, 
     scale: 1.8, 
@@ -408,6 +422,13 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[1].classList.remove('active'),
     onReverseComplete: () => sections[1].classList.add('active')
+  }, 2.1)
+  // Stagger exit
+  .to(sections[1].querySelectorAll('.mono-section-label, .section-title, .section-desc, .capability-card'), {
+    y: -40,
+    opacity: 0,
+    stagger: 0.03,
+    duration: 0.3
   }, 2.1);
 
   // 3. Projects (Section 2) transitions
@@ -420,6 +441,12 @@ function initHubtownThreeDScroll() {
     onStart: () => sections[2].classList.add('active'),
     onReverseComplete: () => sections[2].classList.remove('active')
   }, 2.6)
+  // Stagger entrance
+  .fromTo(sections[2].querySelectorAll('.mono-section-label, .section-title, .section-desc, .project-row'), 
+    { y: 40, opacity: 0 },
+    { y: 0, opacity: 1, stagger: 0.05, duration: 0.3, ease: "power2.out" },
+    2.6
+  )
   .to(sections[2], { 
     opacity: 0, 
     scale: 1.8, 
@@ -428,6 +455,13 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[2].classList.remove('active'),
     onReverseComplete: () => sections[2].classList.add('active')
+  }, 3.6)
+  // Stagger exit
+  .to(sections[2].querySelectorAll('.mono-section-label, .section-title, .section-desc, .project-row'), {
+    y: -40,
+    opacity: 0,
+    stagger: 0.03,
+    duration: 0.3
   }, 3.6);
 
   // 4. Process (Section 3) transitions
@@ -440,6 +474,12 @@ function initHubtownThreeDScroll() {
     onStart: () => sections[3].classList.add('active'),
     onReverseComplete: () => sections[3].classList.remove('active')
   }, 4.1)
+  // Stagger entrance
+  .fromTo(sections[3].querySelectorAll('.mono-section-label, .section-title, .section-desc, .process-step'), 
+    { y: 40, opacity: 0 },
+    { y: 0, opacity: 1, stagger: 0.05, duration: 0.3, ease: "power2.out" },
+    4.1
+  )
   .to(sections[3], { 
     opacity: 0, 
     scale: 1.8, 
@@ -448,6 +488,13 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[3].classList.remove('active'),
     onReverseComplete: () => sections[3].classList.add('active')
+  }, 5.1)
+  // Stagger exit
+  .to(sections[3].querySelectorAll('.mono-section-label, .section-title, .section-desc, .process-step'), {
+    y: -40,
+    opacity: 0,
+    stagger: 0.03,
+    duration: 0.3
   }, 5.1);
 
   // 5. About (Section 4) transitions
@@ -460,6 +507,12 @@ function initHubtownThreeDScroll() {
     onStart: () => sections[4].classList.add('active'),
     onReverseComplete: () => sections[4].classList.remove('active')
   }, 5.6)
+  // Stagger entrance
+  .fromTo(sections[4].querySelectorAll('.mono-section-label, .section-title, .about-lead, .about-text, .specs-panel, .specs-list li'), 
+    { y: 40, opacity: 0 },
+    { y: 0, opacity: 1, stagger: 0.04, duration: 0.3, ease: "power2.out" },
+    5.6
+  )
   .to(sections[4], { 
     opacity: 0, 
     scale: 1.8, 
@@ -468,6 +521,13 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[4].classList.remove('active'),
     onReverseComplete: () => sections[4].classList.add('active')
+  }, 6.6)
+  // Stagger exit
+  .to(sections[4].querySelectorAll('.mono-section-label, .section-title, .about-lead, .about-text, .specs-panel, .specs-list li'), {
+    y: -40,
+    opacity: 0,
+    stagger: 0.03,
+    duration: 0.3
   }, 6.6);
 
   // 6. Contact (Section 5) transitions
@@ -479,7 +539,13 @@ function initHubtownThreeDScroll() {
     duration: 0.3, 
     onStart: () => sections[5].classList.add('active'),
     onReverseComplete: () => sections[5].classList.remove('active')
-  }, 7.1);
+  }, 7.1)
+  // Stagger entrance
+  .fromTo(sections[5].querySelectorAll('.mono-section-label, .section-title, .section-desc, .form-group, .form-checkbox-group, .form-actions, .info-block'), 
+    { y: 40, opacity: 0 },
+    { y: 0, opacity: 1, stagger: 0.04, duration: 0.3, ease: "power2.out" },
+    7.1
+  );
 
   // Three.js animations synchronized on the same timeline
   // Phase 1: Look Left
@@ -517,7 +583,7 @@ function initHubtownThreeDScroll() {
       positions[i] += flightEngine.speed;
       if(positions[i] > 100) positions[i] = -1500; 
     }
-    particles.geometry.attributes.position.needsUpdate = true;
+    positions.needsUpdate = true;
 
     // Scroll the topographical terrain seamlessly
     terrain.position.z += flightEngine.speed;
@@ -557,57 +623,72 @@ function initHubtownThreeDScroll() {
    -------------------------------------------------- */
 function initBootLoader() {
   const loader = document.getElementById("boot-loader");
-  const fill = document.getElementById("loader-fill-bar");
-  const log = document.getElementById("loader-terminal-log");
+  const percentText = document.getElementById("loader-percent-val");
+  const statusText = document.getElementById("loader-status-msg");
   const btn = document.getElementById("btn-enter-simulation");
-  const status = document.querySelector(".loader-status");
   const opening = document.getElementById("big-opening-brand");
+  const blocks = document.querySelectorAll(".loader-block-dot");
 
-  if (!loader || !fill || !log || !btn) return;
+  if (!loader || !percentText || !statusText || !btn || !opening || blocks.length === 0) return;
 
   // Disable scroll at boot
   document.body.style.overflow = "hidden";
 
-  const logLines = [
-    "BOOT PROTOCOL 0x7E3... ACTIVE",
-    "ESTABLISHING SECURE CONNECTION TO CLIENT NODE...",
+  // Diagnostic status text list to cycle through as percentage climbs
+  const statusMessages = [
+    "INITIALIZING COGNITIVE INTERFACE...",
     "RETRIEVING GEOMETRIC COORDINATES...",
-    "PROCEDURAL WIREFRAME GRID: LOADING...",
-    "ATMOSPHERIC DATA LAYER INITIATED... OK",
-    "J.A.R.V.I.S. PILOT INTERACTION MODULE: ONLINE",
-    "REPULSORS AT 100% ENERGY DENSITY... READY",
+    "ATMOSPHERIC DATA LAYER INITIATED...",
     "ALL CORE SYSTEMS NOMINAL"
   ];
 
-  let progress = 0;
-  let logIndex = 0;
+  // We use GSAP to animate a proxy object's progress property from 0 to 100
+  const progressObj = { value: 0 };
 
-  // Add printed lines dynamically
-  const printInterval = setInterval(() => {
-    if (logIndex < logLines.length) {
-      const p = document.createElement("p");
-      p.textContent = `> ${logLines[logIndex]}`;
-      log.appendChild(p);
-      log.scrollTop = log.scrollHeight;
-      logIndex++;
+  gsap.to(progressObj, {
+    value: 100,
+    duration: 3.5, // 3.5 seconds loading time
+    ease: "power1.inOut",
+    onUpdate: () => {
+      const currentVal = Math.floor(progressObj.value);
+      percentText.textContent = `${currentVal}%`;
+
+      // Calculate how many blocks out of total block count should light up
+      const totalBlocks = blocks.length;
+      const activeCount = Math.floor((currentVal / 100) * totalBlocks);
+
+      blocks.forEach((block, idx) => {
+        if (idx < activeCount) {
+          block.classList.add("active");
+        } else {
+          block.classList.remove("active");
+        }
+      });
+
+      // Cycle status labels based on progress range
+      if (currentVal < 30) {
+        statusText.textContent = statusMessages[0];
+      } else if (currentVal < 60) {
+        statusText.textContent = statusMessages[1];
+      } else if (currentVal < 90) {
+        statusText.textContent = statusMessages[2];
+      } else {
+        statusText.textContent = statusMessages[3];
+      }
+    },
+    onComplete: () => {
+      // Hide status labels and show command button
+      gsap.to(statusText, { opacity: 0, duration: 0.3 });
+      gsap.to(percentText, { opacity: 0, duration: 0.3, onComplete: () => {
+        percentText.style.display = "none";
+        statusText.style.display = "none";
+        btn.style.display = "inline-block";
+        gsap.from(btn, { opacity: 0, scale: 0.9, duration: 0.5, ease: "back.out(1.5)" });
+      }});
     }
-  }, 250);
+  });
 
-  // Animate loader bar
-  const progressInterval = setInterval(() => {
-    if (progress < 100) {
-      progress += Math.floor(Math.random() * 5) + 3;
-      if (progress > 100) progress = 100;
-      fill.style.width = `${progress}%`;
-    } else {
-      clearInterval(progressInterval);
-      clearInterval(printInterval);
-      status.textContent = "COGNITIVE STACK LOADED. AWAITING USER COMMAND.";
-      btn.style.display = "inline-block";
-    }
-  }, 80);
-
-  // Click Handler for simulation entrance
+  // Enter click handler
   btn.addEventListener("click", () => {
     // 1. Zoom and fade out loader
     gsap.to(loader, {
@@ -621,7 +702,7 @@ function initBootLoader() {
         // 2. Trigger Epic Reveal Splash
         opening.classList.add("active");
         
-        // 3. Keep splash active for 2.5 seconds, then zoom/fade out
+        // 3. Keep splash active, then zoom/fade out
         setTimeout(() => {
           opening.classList.remove("active");
           gsap.to(opening, {
@@ -632,22 +713,21 @@ function initBootLoader() {
             onComplete: () => {
               opening.style.display = "none";
               
-              // Restore scroll track after splash screen resolves
+              // Restore scroll track
               document.body.style.overflow = "";
 
-              // 4. Set helmet UI to visible and animate visor entrance!
+              // 4. Visor components fly in from edges
               const visorPanels = document.querySelectorAll(".hud-panel");
               const reticle = document.getElementById("reticle-center");
               const tracker = document.getElementById("scroll-tracker");
 
-              // Visor components fly in from edges
               gsap.from(visorPanels[0], { x: -300, rotationY: 90, opacity: 0, duration: 1.5, ease: "power3.out" });
               gsap.from(visorPanels[1], { x: 300, rotationY: -90, opacity: 0, duration: 1.5, ease: "power3.out" });
               gsap.from(reticle, { scale: 3, opacity: 0, duration: 1.2, ease: "back.out(1.7)" });
               gsap.from(tracker, { y: 100, opacity: 0, duration: 1.5, ease: "power2.out" });
             }
           });
-        }, 2800);
+        }, 2200);
       }
     });
   });

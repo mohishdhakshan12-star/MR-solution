@@ -25,12 +25,40 @@
 
   <!-- Cinematic J.A.R.V.I.S. Boot Loader -->
   <div id="boot-loader" role="dialog" aria-modal="true" aria-label="System Boot Sequence">
-    <div class="loader-content">
-      <div class="loader-logo">MR SOLUTION</div>
-      <div class="loader-status">INITIALIZING COGNITIVE INTERFACE...</div>
-      <div class="loader-bar"><div class="loader-fill" id="loader-fill-bar"></div></div>
-      <div class="loader-terminal" id="loader-terminal-log"></div>
-      <button id="btn-enter-simulation" style="display: none;">LAUNCH VISOR COGNITION</button>
+    <div class="hubtown-loader-container">
+      <div class="loader-meta-top">
+        <span class="loader-percent" id="loader-percent-val">0%</span>
+      </div>
+      
+      <div class="loader-blocks-row" id="loader-blocks-row">
+        <!-- 16 square blocks that light up sequentially -->
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+        <span class="loader-block-dot"></span>
+      </div>
+
+      <div class="loader-meta-bottom">
+        <span class="loader-label" id="loader-status-msg">LOADING CONTENT</span>
+      </div>
+      
+      <div style="text-align: center;">
+        <button id="btn-enter-simulation" class="btn btn-primary" style="display: none; margin-top: 2rem;">
+          LAUNCH VISOR COGNITION
+        </button>
+      </div>
     </div>
   </div>
 

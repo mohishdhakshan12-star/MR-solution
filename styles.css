@@ -1888,66 +1888,65 @@ p {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #010203;
+  background-color: #05070a; /* Very deep blue-grey */
   z-index: 10000;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Rajdhani', sans-serif;
-  color: var(--visor-cyan);
+  font-family: 'JetBrains Mono', 'Space Mono', monospace;
 }
 
-.loader-content {
+.hubtown-loader-container {
   width: 90%;
-  max-width: 500px;
-  text-align: center;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
-.loader-logo {
-  font-size: 2.5rem;
-  font-weight: 700;
-  letter-spacing: 12px;
-  margin-bottom: 2rem;
+.loader-meta-top {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.loader-percent {
+  font-size: 11px;
+  letter-spacing: 1px;
   color: var(--visor-cyan);
-  text-shadow: 0 0 15px rgba(58, 143, 183, 0.6);
-  text-transform: uppercase;
-}
-
-.loader-status {
-  font-size: 0.8rem;
-  letter-spacing: 4px;
-  margin-bottom: 1rem;
   opacity: 0.8;
 }
 
-.loader-bar {
-  width: 100%;
-  height: 4px;
-  background: rgba(58, 143, 183, 0.1);
-  border-radius: 2px;
-  margin-bottom: 2rem;
-  overflow: hidden;
+.loader-blocks-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 12px;
 }
 
-.loader-fill {
-  width: 0%;
-  height: 100%;
-  background: var(--visor-cyan);
-  box-shadow: 0 0 8px var(--visor-cyan);
-  transition: width 0.1s linear;
+.loader-block-dot {
+  flex: 1;
+  height: 10px;
+  background-color: rgba(58, 143, 183, 0.12); /* Dim state in screenshot */
+  border-radius: 1px;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.loader-terminal {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  text-align: left;
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(58, 143, 183, 0.2);
-  height: 120px;
-  padding: 10px;
-  overflow-y: auto;
-  color: rgba(58, 143, 183, 0.7);
-  margin-bottom: 2rem;
+.loader-block-dot.active {
+  background-color: #e2e8f0; /* White-blue glow state */
+  box-shadow: 0 0 12px rgba(226, 232, 240, 0.85);
+}
+
+.loader-meta-bottom {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.loader-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--visor-cyan);
+  text-transform: uppercase;
 }
 
 #btn-enter-simulation {
