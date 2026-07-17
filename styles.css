@@ -1772,6 +1772,8 @@ p {
   height: 100vh;
   z-index: 10;
   pointer-events: none; /* Clicks pass through to active content elements */
+  opacity: 0; /* Hidden during loading stage */
+  transition: opacity 1s ease;
 }
 
 .cinematic-viewport section {

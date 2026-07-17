@@ -348,10 +348,15 @@ function initHubtownThreeDScroll() {
 
   const sections = document.querySelectorAll('.cinematic-viewport section');
   
-  // Set initial states for cinematic zoom slides (all start hidden to prevent boot flashes)
+  // Set initial states for cinematic zoom slides (Hero starts active inside hidden viewport container)
   sections.forEach((sec, idx) => {
-    gsap.set(sec, { opacity: 0, scale: 0.3, visibility: "hidden", pointerEvents: "none" });
-    sec.classList.remove('active');
+    if (idx === 0) {
+      gsap.set(sec, { opacity: 1, scale: 1, visibility: "visible", pointerEvents: "auto" });
+      sec.classList.add('active');
+    } else {
+      gsap.set(sec, { opacity: 0, scale: 0.3, visibility: "hidden", pointerEvents: "none" });
+      sec.classList.remove('active');
+    }
   });
 
   const tl = gsap.timeline({
@@ -663,24 +668,24 @@ function initBootLoader() {
         // Skip the big opening brand and directly boot the simulation!
         document.body.style.overflow = "";
 
+        // Force GSAP ScrollTrigger to re-calculate scroll metrics now that overflow is restored
+        ScrollTrigger.refresh();
+
         // Fade in Navigation Header
         gsap.to(".header", { opacity: 1, visibility: "visible", duration: 1.2, ease: "power2.out" });
 
-        // Fade in Hero slide
-        const firstSection = document.querySelector('.cinematic-viewport section');
-        if (firstSection) {
-          gsap.to(firstSection, { 
+        // Fade in the Cinematic Viewport wrapper (revealing the active Hero slide inside)
+        const viewport = document.querySelector('.cinematic-viewport');
+        if (viewport) {
+          gsap.to(viewport, { 
             opacity: 1, 
-            scale: 1, 
-            autoAlpha: 1, 
             pointerEvents: "auto", 
             duration: 1.2, 
-            ease: "power2.out", 
-            onComplete: () => firstSection.classList.add('active') 
+            ease: "power2.out" 
           });
-          
+
           // Stagger inner items of hero in (Hubtown style)
-          gsap.fromTo(firstSection.querySelectorAll('.stagger-hero-item'),
+          gsap.fromTo(viewport.querySelectorAll('#hero .stagger-hero-item'),
             { y: 40, opacity: 0 },
             { y: 0, opacity: 1, stagger: 0.08, duration: 1.0, ease: "power2.out" }
           );
