@@ -514,6 +514,8 @@ p {
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
+  opacity: 0;
+  visibility: hidden; /* Prevent flash of nav menu during boot */
 }
 
 .header-container {

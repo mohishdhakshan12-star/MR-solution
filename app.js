@@ -348,15 +348,10 @@ function initHubtownThreeDScroll() {
 
   const sections = document.querySelectorAll('.cinematic-viewport section');
   
-  // Set initial states for cinematic zoom slides
+  // Set initial states for cinematic zoom slides (all start hidden to prevent boot flashes)
   sections.forEach((sec, idx) => {
-    if (idx === 0) {
-      gsap.set(sec, { opacity: 1, scale: 1, visibility: "visible", pointerEvents: "auto" });
-      sec.classList.add('active');
-    } else {
-      gsap.set(sec, { opacity: 0, scale: 0.3, visibility: "hidden", pointerEvents: "none" });
-      sec.classList.remove('active');
-    }
+    gsap.set(sec, { opacity: 0, scale: 0.3, visibility: "hidden", pointerEvents: "none" });
+    sec.classList.remove('active');
   });
 
   const tl = gsap.timeline({
@@ -716,7 +711,30 @@ function initBootLoader() {
               // Restore scroll track
               document.body.style.overflow = "";
 
-              // 4. Visor components fly in from edges
+              // Fade in Navigation Header
+              gsap.to(".header", { opacity: 1, visibility: "visible", duration: 1.2, ease: "power2.out" });
+
+              // Fade in Hero slide
+              const firstSection = document.querySelector('.cinematic-viewport section');
+              if (firstSection) {
+                gsap.to(firstSection, { 
+                  opacity: 1, 
+                  scale: 1, 
+                  autoAlpha: 1, 
+                  pointerEvents: "auto", 
+                  duration: 1.2, 
+                  ease: "power2.out", 
+                  onComplete: () => firstSection.classList.add('active') 
+                });
+                
+                // Stagger inner items of hero in (Hubtown style)
+                gsap.fromTo(firstSection.querySelectorAll('.stagger-hero-item'),
+                  { y: 40, opacity: 0 },
+                  { y: 0, opacity: 1, stagger: 0.08, duration: 1.0, ease: "power2.out" }
+                );
+              }
+
+              // Visor components fly in from edges
               const visorPanels = document.querySelectorAll(".hud-panel");
               const reticle = document.getElementById("reticle-center");
               const tracker = document.getElementById("scroll-tracker");
