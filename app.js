@@ -595,10 +595,9 @@ function initBootLoader() {
   const loader = document.getElementById("boot-loader");
   const percentText = document.getElementById("loader-percent-val");
   const statusText = document.getElementById("loader-status-msg");
-  const opening = document.getElementById("big-opening-brand");
   const blocks = document.querySelectorAll(".loader-block-dot");
 
-  if (!loader || !percentText || !statusText || !opening || blocks.length === 0) return;
+  if (!loader || !percentText || !statusText || blocks.length === 0) return;
 
   // Disable scroll at boot
   document.body.style.overflow = "hidden";
