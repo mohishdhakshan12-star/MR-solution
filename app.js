@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initMobileMenu();
   initContactForm();
   initHubtownThreeDScroll();
+  initNavRedirects();
 
   // Run animations if motion is allowed
   if (!prefersReducedMotion) {
@@ -67,64 +68,10 @@ function initMobileMenu() {
 /* --------------------------------------------------
    GSAP & SCROLLTRIGGER ANIMATIONS
    -------------------------------------------------- */
-// Initialize Background Schematic Parallax
-function initBackgroundParallax() {
-  // Gracefully exit if user prefers reduced motion
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  // Slow architectural drag on the main schematic drafting grid
-  gsap.to('.schematic-grid-overlay', {
-    yPercent: -15,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: 'body',
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: 0.5 // Smooth catch-up delay
-    }
-  });
-
-  // Layered depth: Animate terminal nodes at differing, accelerated velocities
-  gsap.to('.node-alpha', {
-    y: '-40vh',
-    x: '30px',
-    ease: 'none',
-    scrollTrigger: {
-      trigger: 'body',
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: 0.8
-    }
-  });
-
-  gsap.to('.node-beta', {
-    y: '-60vh',
-    x: '-40px',
-    ease: 'none',
-    scrollTrigger: {
-      trigger: 'body',
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: 1.2
-    }
-  });
-
-  gsap.to('.node-gamma', {
-    y: '-35vh',
-    x: '15px',
-    ease: 'none',
-    scrollTrigger: {
-      trigger: 'body',
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: 0.6
-    }
-  });
-}
-
-// Call configuration alongside existing GSAP animations
-initBackgroundParallax();
-   function initGsapAnimations() {
+/* --------------------------------------------------
+   GSAP & SCROLLTRIGGER INITIALIZATIONS
+   -------------------------------------------------- */
+function initGsapAnimations() {
   // Register ScrollTrigger plugin (loaded via CDN)
   gsap.registerPlugin(ScrollTrigger);
 
@@ -149,7 +96,7 @@ initBackgroundParallax();
       ease: "power2.out"
     });
 
-    // Animate current pulse along the path using custom object update
+    // Animate current pulse along the path
     const pulseData = { progress: 0 };
     
     circuitTimeline.to(pulseData, {
@@ -162,7 +109,7 @@ initBackgroundParallax();
         pulse.setAttribute("cx", point.x);
         pulse.setAttribute("cy", point.y);
       }
-    }, "-=0.5"); // Start pulse slightly before drawing finishes
+    }, "-=0.5");
   }
 
   // 2. Hero Section Staggered Entrance
@@ -177,78 +124,38 @@ initBackgroundParallax();
       delay: 0.2
     });
   }
+}
 
-  // 3. Scroll Reveals for Generic Sections
-  const reveals = document.querySelectorAll(".scroll-reveal");
-  reveals.forEach(el => {
-    gsap.from(el, {
-      y: 30,
-      opacity: 0,
-      duration: 1,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: el,
-        start: "top 85%", // Starts reveal when element is 85% from top of viewport
-        toggleActions: "play none none none"
+/* --------------------------------------------------
+   NAVIGATION REDIRECTS MAPPED TO SCROLL PROGRESS
+   -------------------------------------------------- */
+function initNavRedirects() {
+  const links = document.querySelectorAll(".nav-link, .mobile-nav-link, .nav-cta, .mobile-cta");
+  
+  links.forEach(link => {
+    link.addEventListener("click", (e) => {
+      const targetId = link.getAttribute("href");
+      if (targetId.startsWith("#")) {
+        e.preventDefault();
+
+        // Map section anchors to scroll-percentage heights
+        const scrollMap = {
+          "#hero": 0.0,
+          "#capabilities": 0.18,
+          "#projects": 0.38,
+          "#process": 0.58,
+          "#about": 0.78,
+          "#contact": 0.98
+        };
+
+        const progress = scrollMap[targetId] !== undefined ? scrollMap[targetId] : 0.0;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+
+        window.scrollTo({
+          top: maxScroll * progress,
+          behavior: "smooth"
+        });
       }
-    });
-  });
-
-  // 4. Staggered reveal for Capability Cards
-  const capCards = document.querySelectorAll(".capability-card");
-  if (capCards.length > 0) {
-    gsap.from(capCards, {
-      y: 40,
-      opacity: 0,
-      duration: 1,
-      stagger: 0.15,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: ".capabilities-grid",
-        start: "top 80%"
-      }
-    });
-  }
-
-  // 5. Staggered reveal for Project Rows
-  const projectRows = document.querySelectorAll(".project-row");
-  if (projectRows.length > 0) {
-    gsap.from(projectRows, {
-      x: -30,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.1,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".project-table",
-        start: "top 80%"
-      }
-    });
-  }
-
-  // 6. Interactive Process Conductor Line Glow
-  const conductorGlow = document.querySelector(".timeline-conductor-glow");
-  if (conductorGlow) {
-    gsap.to(conductorGlow, {
-      height: "100%",
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".process-timeline",
-        start: "top 20%",
-        end: "bottom 80%",
-        scrub: true
-      }
-    });
-  }
-
-  // Activate timeline steps as they scroll in
-  const processSteps = document.querySelectorAll(".process-step");
-  processSteps.forEach(step => {
-    ScrollTrigger.create({
-      trigger: step,
-      start: "top 65%",
-      onEnter: () => step.classList.add("active"),
-      onLeaveBack: () => step.classList.remove("active")
     });
   });
 }
@@ -454,6 +361,21 @@ function initHubtownThreeDScroll() {
             tracker.style.opacity = '0.5';
           }
         }
+
+        // Toggling active sections in viewport snaps
+        const sections = document.querySelectorAll('.cinematic-viewport section');
+        const progress = self.progress;
+        
+        // Split scroll progress evenly into 6 sections (Hero, Capabilities, Projects, Process, About, Contact)
+        const index = Math.min(Math.floor(progress * 6), 5);
+
+        sections.forEach((sec, idx) => {
+          if (idx === index) {
+            sec.classList.add('active');
+          } else {
+            sec.classList.remove('active');
+          }
+        });
       }
     }
   });
