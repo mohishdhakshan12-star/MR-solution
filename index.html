@@ -53,53 +53,40 @@
       <div class="loader-meta-bottom">
         <span class="loader-label" id="loader-status-msg">LOADING CONTENT</span>
       </div>
-      
-      <div style="text-align: center;">
-        <button id="btn-enter-simulation" class="btn btn-primary" style="display: none; margin-top: 2rem;">
-          LAUNCH VISOR COGNITION
-        </button>
-      </div>
     </div>
   </div>
   </div>
 
-  <!-- J.A.R.V.I.S. Helmet Visor Layer (Fixed background and hud overlay) -->
-  <div class="viewport-container" id="helmet-viewport" aria-hidden="true">
-    <!-- 3D Environment -->
+  <!-- Hubtown Architectural Blueprint Drafting Workstation -->
+  <div class="blueprint-viewport-container" id="blueprint-viewport" aria-hidden="true">
+    <!-- 3D Grid Cylinder Environment -->
     <canvas id="webgl-canvas"></canvas>
 
-    <div class="visor-glass"></div>
-
-    <!-- 2D Curved HUD UI Overlay -->
+    <!-- Technical Alignment HUD Overlay -->
     <div class="ui-perspective" id="visor-ui">
-      <!-- Left HUD Panel -->
+      <!-- Left Architectural telemetry Panel -->
       <div class="hud-panel panel-left">
-        <div class="hud-title">MARK VII // SYSTEMS</div>
-        <div class="hud-data">REPULSORS: <span id="val-rep">85</span>%</div>
-        <div class="hud-title">FLIGHT ENVELOPE STABLE</div>
+        <div class="hud-title">MR SOLUTION // ARCHITECTURAL</div>
+        <div class="hud-data">COMPASS ANGLE: <span id="val-rep">85</span>&deg;</div>
+        <div class="hud-title">MATRIX PLATES NOMINAL</div>
         <div class="power-bar-container"><div class="power-bar-fill"></div></div>
       </div>
 
-      <!-- Center Targeting Reticle -->
-      <div class="eye-reticle" id="reticle-center"></div>
+      <!-- Center Vector Drafting Crosshair -->
+      <div class="drafting-crosshair" id="reticle-center"></div>
 
-      <!-- Right HUD Panel -->
+      <!-- Right Coordinate telemetry Panel -->
       <div class="hud-panel panel-right">
-        <div class="hud-title">ALTITUDE TRACKING</div>
-        <div class="hud-data"><span id="val-alt">42,000</span> FT</div>
-        <div class="hud-title" id="status-text">CRUISING SPEED</div>
+        <div class="hud-title">COORDINATE SEGMENTS</div>
+        <div class="hud-data">OFFSET: <span id="val-alt">42,000</span> PX</div>
+        <div class="hud-title" id="status-text">GRID ALIGNED // SAFE</div>
         <div class="power-bar-container" style="display: flex; justify-content: flex-end;">
           <div class="power-bar-fill" style="width: 60%;"></div>
         </div>
       </div>
 
-      <div id="scroll-tracker">ENGAGE THRUSTERS (SCROLL)</div>
+      <div id="scroll-tracker">SCROLL TO EXPLORE BLUEPRINTS</div>
     </div>
-
-    <!-- Helmet Inner Shadows & Borders -->
-    <div class="helmet-interior"></div>
-    <div class="helmet-jaw-left"></div>
-    <div class="helmet-jaw-right"></div>
   </div>
 
   <!-- Background Technical Grid & Gridlines -->

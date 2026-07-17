@@ -255,7 +255,7 @@ function initHubtownThreeDScroll() {
   if (!canvas) return;
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x010203, 0.0035); // Dense fog hides the horizon edge
+  scene.fog = new THREE.FogExp2(0x0a0b0d, 0.0035); // Dense fog hides the horizon edge
 
   const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2500);
   camera.position.set(0, 0, 0);
@@ -278,7 +278,7 @@ function initHubtownThreeDScroll() {
   }
   gridGeo.computeVertexNormals();
 
-  const gridMat = new THREE.MeshBasicMaterial({ color: 0x3a8fb7, wireframe: true, transparent: true, opacity: 0.12 });
+  const gridMat = new THREE.MeshBasicMaterial({ color: 0xc19a5b, wireframe: true, transparent: true, opacity: 0.12 });
   const terrain = new THREE.Mesh(gridGeo, gridMat);
   terrain.rotation.x = -Math.PI / 2;
   terrain.position.y = -80; // Distance below the camera
@@ -302,7 +302,7 @@ function initHubtownThreeDScroll() {
   const targetGroup = new THREE.Group();
   scene.add(targetGroup);
   
-  const targetMat = new THREE.MeshBasicMaterial({ color: 0xd93829, wireframe: true, transparent: true, opacity: 0 }); 
+  const targetMat = new THREE.MeshBasicMaterial({ color: 0xd37546, wireframe: true, transparent: true, opacity: 0 }); 
   
   const target1 = new THREE.Mesh(new THREE.OctahedronGeometry(15, 0), targetMat);
   target1.position.set(-200, 20, -500); 
@@ -521,16 +521,16 @@ function initHubtownThreeDScroll() {
   // Phase 1: Look Left
   tl.to(camera.rotation, { y: 0.35, ease: "sine.inOut" }, 1.1)
     .to(targetMat, { opacity: 0.6, duration: 0.5 }, 1.1) 
-    .to("#status-text", { textContent: "BOGEY IDENTIFIED", duration: 0 }, 1.1);
+    .to("#status-text", { textContent: "VECTOR LOCK ACTIVE", duration: 0 }, 1.1);
     
   // Phase 2: Look Right
   tl.to(camera.rotation, { y: -0.35, ease: "sine.inOut" }, 2.6);
     
-  // Phase 3: Lock On & Combat Mode
+  // Phase 3: Lock On & Drafting Override
   tl.to(camera.rotation, { y: 0, ease: "power2.out" }, 4.1)
-    .to("#helmet-viewport", { className: "viewport-container combat-mode", duration: 0.1 }, 4.1)
+    .to("#blueprint-viewport", { className: "blueprint-viewport-container render-override-mode", duration: 0.1 }, 4.1)
     .to(targetMat, { opacity: 1, duration: 0.2 }, 4.1) 
-    .to("#status-text", { textContent: "COMBAT OVERRIDE", duration: 0 }, 4.1)
+    .to("#status-text", { textContent: "STRUCTURAL OVERRIDE", duration: 0 }, 4.1)
     .to("#reticle-center", { scale: 0.6, rotate: 45, duration: 0.3 }, 4.1);
     
   // Phase 4: Engage Thrusters (Speed increases dynamically)
